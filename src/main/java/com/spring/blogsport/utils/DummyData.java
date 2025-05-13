@@ -23,13 +23,13 @@ public class DummyData {
         List<Post> postList = new ArrayList<>();
 
         Post post1 = new Post();
-        post1.setAutor("Teste");
+        post1.setAuthor("Teste");
         post1.setDate(LocalDate.now());
         post1.setTitle("Teste");
         post1.setText("Teste");
 
         Post post2 = new Post();
-        post2.setAutor("Teste");
+        post2.setAuthor("Teste");
         post2.setDate(LocalDate.now());
         post2.setTitle("Teste");
         post2.setText("Teste");
