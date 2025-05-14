@@ -1,67 +1,77 @@
 package com.spring.blogsport.utils;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import com.spring.blogsport.model.Category;
 import com.spring.blogsport.model.Post;
-import com.spring.blogsport.repository.BlogsportRepository;
+import com.spring.blogsport.model.User;
+import com.spring.blogsport.repository.CategoryRepository;
+import com.spring.blogsport.repository.PostRepository;
+import com.spring.blogsport.repository.UserRepository;
 
-//import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 @Component
 public class DummyData {
 
     @Autowired
-    BlogsportRepository blogsportRepository;
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private PostRepository postRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-    //@PostConstruct
-    public void savePosts() {
-        List<Post> postList = new ArrayList<>();
+    @PostConstruct
+    public void saveDummyData() {
+        //Categories
+        Category futebol = categoryRepository.findByName("Futebol")
+                .orElseGet(() -> categoryRepository.save(Category.builder().name("Futebol").build()));
+        Category basquete = categoryRepository.findByName("Basquete")
+                .orElseGet(() -> categoryRepository.save(Category.builder().name("Basquete").build()));
 
-        Post post1 = new Post();
-        post1.setAuthor("Fabrizio Romano");
-        post1.setDate(LocalDate.now());
-        post1.setTitle(
-                "Lamine Yamal: “Maybe the other teams are scared of Real Madrid… 𝐰𝐞 𝐝𝐨𝐧’𝐭 𝐟𝐞𝐚𝐫 𝐭𝐡𝐞𝐦” 👀");
-        post1.setText(
-                "Lamine Yamal: “Maybe the other teams are scared of Real Madrid… 𝐰𝐞 𝐝𝐨𝐧’𝐭 𝐟𝐞𝐚𝐫 𝐭𝐡𝐞𝐦” 👀\n"
-                        + //
-                        "\n" + //
-                        "“We feel 𝐬𝐮𝐩𝐞𝐫𝐢𝐨𝐫 to every other team, that’s the view”.\n" + //
-                        "\n" + //
-                        "“At the end of the day, when Real Madrid beats you, it doesn’t sit well... during the recent years we suffered, and this years we gave our all, our 𝐛𝐞𝐬𝐭 𝐦𝐞𝐧𝐭𝐚𝐥𝐢𝐭𝐲” 🧠");
+        //Users
+        User admin = userRepository.findByEmail("admin@blogsport.com")
+                .orElseGet(() -> userRepository.save(User.builder()
+                        .name("Admin")
+                        .email("admin@blogsport.com")
+                        .password(passwordEncoder.encode("admin123"))
+                        .birthDate(LocalDate.of(1990, 1, 1))
+                        .role(User.Role.ADMIN)
+                        .build()));
 
-        Post post2 = new Post();
-        post2.setAuthor("Fabrizio Romano");
-        post2.setDate(LocalDate.now());
-        post2.setTitle("𝐔𝐏𝐃𝐀𝐓𝐄: Real Madrid consider Dean Huijsen for centre back position");
-        post2.setText(
-                "Xabi Alonso wants new centre back soon with Saliba, Konaté and Huijsen all included in Real Madrid’s list.\n"
-                        + //
-                        "\n" + //
-                        "Saliba, dream target for present/future but currently considered too expensive as Arsenal offer new deal.\n"
-                        + //
-                        "\n" + //
-                        "Konaté is out of contract in June 2026 at Liverpool… negotiations are not advancing, Real are interested.\n"
-                        + //
-                        "\n" + //
-                        "❗️ Huijsen can be available easily for £50m release clause, he’s Spanish and keen on the move giving his 𝐩𝐫𝐢𝐨𝐫𝐢𝐭𝐲 to Real Madrid in case they want to advance.\n"
-                        + //
-                        "\n" + //
-                        "Chelsea, Liverpool and Arsenal all want to pay release clause for Huijsen this month, still insisting to make it happen… Real Madrid are expected to decide soon.");
+        User user = userRepository.findByEmail("user@blogsport.com")
+                .orElseGet(() -> userRepository.save(User.builder()
+                        .name("Usuário")
+                        .email("user@blogsport.com")
+                        .password(passwordEncoder.encode("user123"))
+                        .birthDate(LocalDate.of(2000, 5, 10))
+                        .role(User.Role.USER)
+                        .build()));
 
-        /*
-        postList.add(post1);
-        postList.add(post2);
+        //Posts
+        if (postRepository.findAll().isEmpty()) {
+            postRepository.save(Post.builder()
+                    .title("Primeiro post de Futebol")
+                    .content("Conteúdo sobre futebol.")
+                    .createdAt(LocalDateTime.now())
+                    .user(admin)
+                    .category(futebol)
+                    .build());
 
-        for (Post post : postList) {
-            Post postSaved = blogsportRepository.save(post);
-            System.out.println("Post salvo: " + postSaved.getId());
+            postRepository.save(Post.builder()
+                    .title("Primeiro post de Basquete")
+                    .content("Conteúdo sobre basquete.")
+                    .createdAt(LocalDateTime.now())
+                    .user(user)
+                    .category(basquete)
+                    .build());
         }
-        */
     }
 }
