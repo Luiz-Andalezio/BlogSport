@@ -3,8 +3,7 @@ package com.spring.blogsport.model;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.hibernate.annotations.Comment;
-
+import com.spring.blogsport.model.Comment;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
