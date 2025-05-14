@@ -8,47 +8,42 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "posts")
+@Table(name = "comments")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Post {
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Title is required")
-    private String title;
-
+    @NotBlank(message = "Comment text is required")
     @Column(columnDefinition = "TEXT")
-    @NotBlank(message = "Content is required")
     private String content;
-
-    private String imageUrl;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    // Many posts to one user (author)
+    // Many comments to one user
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    // Many posts to one category
+    // Many comments to one post
     @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
+    @JoinColumn(name = "post_id")
+    private Post post;
 
-    // One post to many comments
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments;
+    // Optional: threaded replies (self-referencing comment replies)
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+    private Comment parent;
 
-    // One post to many likes
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Like> likes;
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
+    private List<Comment> replies;
 
     @PrePersist
     protected void onCreate() {
