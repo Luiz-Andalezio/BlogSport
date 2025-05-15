@@ -17,14 +17,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequestMapping("/account")
-public class AccountController {
+public class UserController {
 
     private final UserService userService;
     private final CommentService commentService;
     private final LikeService likeService;
 
     @Autowired
-    public AccountController(UserService userService,
+    public UserController(UserService userService,
                              CommentService commentService,
                              LikeService likeService) {
         this.userService = userService;

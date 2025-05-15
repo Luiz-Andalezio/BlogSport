@@ -3,8 +3,7 @@ package com.spring.blogsport.model;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.hibernate.annotations.Comment;
-
+import com.spring.blogsport.model.Comment;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -66,9 +65,9 @@ public class User {
     private List<Comment> comments;
 
     // One user to many likes
-    // One user to many likes
-    // @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    // private List<Like> likes;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Like> likes;
+    
     public enum Role {
         USER, ADMIN
     }
