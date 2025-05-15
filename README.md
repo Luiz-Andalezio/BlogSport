@@ -1,11 +1,12 @@
 ---
+
 # 🏆 **BlogSport - Java Spring Boot Project**
 
-A web application for creating, managing, and publishing sports-related blog content.
+A complete web application for creating, managing, and publishing sports-related blog content.
 
-Developed using **Java Spring Boot**, **Maven**, and **Thymeleaf** for server-side rendering, this project features user authentication, post management, and a responsive interface for sports content publishing.
+Built with **Java Spring Boot**, **Maven**, **Thymeleaf**, and modern web tools like **Tailwind CSS** and **htmx**, this project features secure authentication, category/post/comment/like management, and an interactive UI for engaging sports fans.
 
-This project was developed as part of the *Web Application Development* course and serves as a practical experience in full-stack Java development and cloud deployment.
+This system was developed as part of the *Web Application Development* course and is designed to offer practical experience in **full-stack Java development**, **modern UI**, and **containerized deployment** with Docker.
 
 ---
 
@@ -23,285 +24,269 @@ This project was developed as part of the *Web Application Development* course a
 
 ### 🔐 **Authentication and User Management**
 
-1. **Admin (Blogger) Pre-Registered Login**
-  - The blogger (admin) account is pre-registered and has access to post and manage content.
+1. **Pre-Registered Admin (Blogger)**
 
-2. **User Registration and Login (Content Consumers)**
-  - Users can sign up and log in to access and interact with the platform.
-  - During registration, the user must provide:
-    - Full name
-    - Email address
-    - Date of birth
-    - Password (with confirmation field)
+   * The blogger has exclusive access to content administration via a pre-created account.
+
+2. **User Registration & Login (Content Consumers)**
+
+   * Secure registration form with validation for:
+
+     * Full name
+     * Email (unique)
+     * Date of birth
+     * Password + confirmation
 
 3. **User Account Management**
-  - Logged-in users can:
-    - Edit their name, email, password, and profile picture
-    - Log out of the system
-    - View all of their own comments
-    - View all liked posts and liked comments in separate sections
+
+   * Edit profile (name, email, password, profile picture)
+   * View own comments, liked posts, and liked comments in dedicated areas
+   * Logout from the system securely
+
+---
 
 ### 📝 **Content and Interaction Features**
 
 4. **Category and Post Management (Admin Only)**
-  - The blogger can:
-    - Create, update, and delete categories (CRUD)
-    - Create, edit, and delete blog posts
-    - Add images to posts using the **Summernote** rich-text editor
 
-5. **User Engagement on Posts**
-  - Registered users can:
-    - Like blog posts and comments
-    - Write comments on posts
-    - Reply to comments using **@mentions**, similar to Instagram
-    - Edit or delete *only* their own comments
+   * Create, update, delete categories
+   * Create and edit posts using a rich text editor (**Summernote**) with image support
+   * Posts are linked to categories and author metadata
 
-### 🔎 **Additional Features**
+5. **User Interaction on Posts**
 
-6. **Search Functionality**
-  - A search bar allows users to find specific blog posts by keywords.
+   * Like and unlike posts and comments
+   * Write comments and replies using **@mention**
+   * Edit or delete own comments only
+   * Nested comment structure (reply to reply)
 
-7. **Data Storage and Security**
-  - All data is stored in a secure database.
-  - Passwords are encrypted for protection.
+---
+
+### 🔎 **Additional Functionalities**
+
+6. **Search System**
+
+   * Keyword-based search for posts
+
+7. **Reports**
+
+   * Admin can generate downloadable PDF reports with post/comment statistics using **iTextPDF**
+
+8. **Security & Access Control**
+
+   * Role-based access (admin vs. regular users)
+   * Protected routes via **Spring Security**
+   * BCrypt password encryption
+
+9. **UX/UI Enhancements**
+
+   * Dynamic page updates via **htmx.js**
+   * Responsive layout with **Tailwind CSS**
 
 ---
 
 ## 🛠️ Technologies Used
 
-- **Frontend**:
-  - Thymeleaf templates for dynamic HTML pages
+* **Frontend**:
 
-- **Backend**:
-  - Java 21 + Spring Boot 3.x
-  - Maven for project build and dependency management
-  - PostgreSQL as the relational database
-  - JPA/Hibernate for ORM and data persistence
-  - Spring Security for login and access control
+  * Thymeleaf for HTML templates
+  * Tailwind CSS for responsive design
+  * htmx.js for client-server interactions (likes, comments, filters, etc.)
 
-- **Others**:
-  - Deployed on Docker
+* **Backend**:
+
+  * Java 21 with Spring Boot 3.x
+  * Maven for build automation
+  * JPA/Hibernate for ORM
+  * PostgreSQL as database
+  * Spring Security for authentication and access control
+  * Flyway for version-controlled database migrations
+  * iTextPDF for PDF generation
+
+* **DevOps**:
+
+  * Docker for database containerization
+  * Custom PostgreSQL Dockerfile with timezone, locale, and health checks
 
 ---
 
 ## 📁 Project Structure
 
-- `src/main/java/` – Java source code (organized by packages: `controller`, `service`, `repository`, `model`, etc.).
-- `src/main/resources/` – Configuration and resource files:
-  - `application.properties` or `application.yml` – Main configuration.
-  - `static/` – Static files (images, JS, CSS).
-  - `templates/` – HTML/Thymeleaf templates.
-  - `db/` – SQL scripts or database migrations.
-- `src/test/java/` – Unit and integration tests.
-- `target/` – Compiled output and packaged JAR/WAR (auto-generated after build).
-- `docs/` – Documentation files (PDFs, diagrams, markdown, etc.).
-- `programs/` – Custom folder containing services and tools used in development:
-  - `postgresql/` – Custom Docker setup for PostgreSQL database:
-   - Contains a `Dockerfile` that sets locale, timezone (`pt_BR.UTF-8`, `America/Sao_Paulo`), and health checks.
-   - The container is built and run with a named volume (`postgresql_data`) for data persistence.
-   - Includes setup commands to:
-    - Build the Docker image: `web/postgresql`
-    - Run the container on port `5432` with user `postgres`
-  - `pgadmin/` – PgAdmin4 installation and setup:
-   - Installed via apt with repository and keyring.
-   - Used to manage and inspect the PostgreSQL database locally.
-- `pom.xml` or `build.gradle` – Build configuration (Maven or Gradle).
-- `.gitignore` – Files/folders ignored by Git.
-- `README.md` – Project overview and usage guide.
+* `src/main/java/` – Organized by MVC pattern:
+  * `controller/` – Handles HTTP routes and UI interactions
+  * `service/` – Business logic
+  * `model/` – Entity classes and DTOs
+  * `repository/` – Spring Data interfaces for DB access
+  * `security/` – JWT auth, BCrypt, access filters
+
+* `src/main/resources/`:
+  * `application.yml` – Central configuration
+  * `templates/` – Thymeleaf HTML pages
+  * `static/` – Images, Tailwind, scripts
+  * `db/migration/` – Flyway migration scripts
+
+* `src/test/java/` – JUnit tests
+
+* `docs/` – Diagrams, markdowns, generated reports
+
+* `programs/` – Tools & Docker setups:
+  * `postgresql/` – PostgreSQL container image
+  * `pgadmin/` – PgAdmin4 setup instructions
 
 ---
 
 ## 📈 Project Status
 
-- **Current progress**: 10% (Prototyped in local environment).
-- **Next steps**:
-  * I. Implementation of the Category, User, Comment, and Like classes, all with their functionalities.
-  * II. Login integration with complete validations.
-  * III. Backend and Frontend optimization.
-  * IV. Future deployment.
+* **Current progress**: \~10% completed
+
+* **Latest**:
+  * Posting tests
+  * Security Spring Auth
+ 
+* **Next steps**:
+  1. Classes and tables for admin, posts, comments, likes implemented
+  2. Admin panel functional
+  3. Authentication & profile management active
+  4. Enhance validations and security filters
+  5. PDF report integration
+  6. Final UI polishing and responsive layout testing
+  7. Deployment phase
 
 ---
 
 ## ⚙️ How to Run Locally (Setup Guide for Windows & Linux Mint)
 
-This guide walks you through running the project locally on both systems.
+### ✅ Prerequisites
 
-#### ✅ **Prerequisites**
+Install the following tools:
 
-Make sure the following are installed on your system:
+* Java 21 JDK
+* Maven
+* Docker Engine
+* PgAdmin (optional, DB visualization)
+* IntelliJ IDEA / Eclipse / VS Code
 
-- **For both Windows and Linux Mint**:
-  - [Java 21 JDK](https://jdk.java.net/21/)
-  - [Maven](https://maven.apache.org/download.cgi)
-  - [Docker Engine](https://docs.docker.com/get-docker/)
-  - [PgAdmin (optional, for DB inspection)](https://www.pgadmin.org/download/)
-  - A modern IDE (e.g., IntelliJ IDEA, Eclipse, VS Code)
+---
 
-### 🧩 Project Dependencies Summary
+### 🐳 Step 1: Set Up PostgreSQL with Docker
 
-- **Frontend**: Thymeleaf Templates for HTML rendering
-- **Backend**:
-  - Java 21 + Spring Boot 3.x
-  - Maven (build & dependency management)
-  - PostgreSQL (Relational DB)
-  - JPA/Hibernate (ORM)
-  - Spring Security (Authentication/Authorization)
-- **Other**: Docker for containerized PostgreSQL
+```bash
+# Navigate to the container setup folder
+cd programs/postgresql
 
-#### 🐳 Step 1: Set Up the Database with Docker
+# Build the image
+sudo docker build -t="web/postgresql" .
 
-1. Open a terminal or command prompt.
-2. Navigate to the project’s `programs/postgresql/` folder:
+# Create persistent volume
+sudo docker volume create --name postgresql_data
 
-  ```bash
-  cd ~/Programs/postgresql   # Linux Mint
-  cd path\to\Programs\postgresql  # Windows
-  ```
-
-3. Build the Docker image:
-
-  ```bash
-  sudo docker build -t="web/postgresql" .
-  ```
-
-4. Create a Docker volume:
-
-  ```bash
-  sudo docker volume create --name postgresql_data
-  ```
-
-5. Run the PostgreSQL container:
-
-  ```bash
-  sudo docker run -i -t -d --name postgresql -p 5432:5432 \
-    -e POSTGRES_USER=postgres \
-    -e POSTGRES_PASSWORD=pgdb123 \
-    --volume postgresql_data:/var/lib/postgresql/data \
-    web/postgresql
-  ```
-
-#### 🔧 Step 2: Configure the Application
-
-Edit your `src/main/resources/application.properties` (or `.yml`) with the correct database connection:
-
-```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
-spring.datasource.username=postgres
-spring.datasource.password=pgdb123
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
-spring.jpa.properties.hibernate.format_sql=true
-spring.thymeleaf.cache=false
+# Run the container
+sudo docker run -i -t -d --name postgresql -p 5432:5432 \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=pgdb123 \
+  --volume postgresql_data:/var/lib/postgresql/data \
+  web/postgresql
 ```
 
-#### 🚀 Step 3: Run the Application
+---
 
-- **On Linux Mint**:
-  1. Open the terminal.
-  2. Navigate to the project root:
+### 🔧 Step 2: Configure Spring Boot App
 
-    ```bash
-    cd ~/your-project-folder
-    ```
+Edit `src/main/resources/application.yml`:
 
-  3. Run using Maven:
+```yaml
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: pgdb123
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  thymeleaf:
+    cache: false
+```
 
-    ```bash
-    ./mvnw spring-boot:run
-    ```
+---
 
-    Or:
+### 🚀 Step 3: Run the Application
 
-    ```bash
-    mvn clean install
-    java -jar target/your-project-name.jar
-    ```
+```bash
+# Build and run (Linux/Mac)
+./mvnw spring-boot:run
 
-    > Replace `your-project-name.jar` with the correct JAR file name.
+# Or on Windows
+mvnw spring-boot:run
+```
 
-- **On Windows**:
-  1. Open **CMD** or **PowerShell**.
-  2. Navigate to your project folder:
+Alternatively:
 
-    ```cmd
-    cd C:\path\to\your-project
-    ```
+```bash
+mvn clean install
+java -jar target/blogsport-1.0.0.jar
+```
 
-  3. Run with Maven:
-
-    ```cmd
-    mvnw spring-boot:run
-    ```
-
-    Or manually:
-
-    ```cmd
-    mvn clean install
-    java -jar target\your-project-name.jar
-    ```
-
-#### 🌐 Step 4: Access the App
-
-Open your browser and go to:
+Then open your browser:
 
 ```
 http://localhost:8080
 ```
 
-### 🧠 Optional: Use PgAdmin to Monitor the DB
+---
 
-- **Host**: `localhost`
-- **Port**: `5432`
-- **Username**: `postgres`
-- **Password**: `pgdb123`
-- Set connection name: `PostgreSQL Container`
+### 🧠 Optional: Connect PgAdmin
 
-### 🧼 Common Troubleshooting
+* Host: `localhost`
+* Port: `5432`
+* Username: `postgres`
+* Password: `pgdb123`
 
-- 🔌 If port `5432` is in use, check for other PostgreSQL services and stop them.
-- 🔐 If Spring Security is active, ensure that default credentials or login form is implemented.
-- 🗃️ Use `spring.jpa.hibernate.ddl-auto=create` the first time to auto-create tables (then switch back to `update`).
+---
+
+## 🧼 Troubleshooting
+
+* ❌ **Port Conflict**: Stop other PostgreSQL services.
+* 🔑 **Login Error**: Ensure Spring Security form and credentials exist.
+* 🗃️ **Tables Not Created?** Set `ddl-auto=create` once, then revert to `update`.
 
 ---
 
 ## 📓 Commit Convention
 
-This repository follows the [Conventional Commits](https://www.conventionalcommits.org/) specification to maintain a structured, readable, and automation-friendly commit history.
+This repo uses [Conventional Commits](https://www.conventionalcommits.org/) for clear and semantic history.
 
 ### ✔️ Format
 
 ```bash
-<type>(scope):<ENTER>
-<short message explaining the commit>
+<type>(scope): short description
 ```
 
-### 🔧 Common Types
+### 🔧 Types
 
-- `feat`: New feature
-- `fix`: Bug fix
-- `docs`: Documentation updates
-- `style`: Styling changes (CSS, layout, images, etc.)
-- `refactor`: Code refactoring without functional changes
-- `perf`: Performance improvements
-- `test`: Adding or updating tests
-- `build`: Build-related changes (dependencies, scripts)
-- `ci`: Continuous integration configuration
-
-### 📍 Scope
-
-Describes the specific part of the project affected by the change, such as a module (`cryptography`), a page (`login-page`), or a feature (`carousel`).
+* `feat`: New feature
+* `fix`: Bug fix
+* `docs`: Documentation changes
+* `style`: CSS/layout updates
+* `refactor`: Internal code improvements
+* `test`: New tests or updates
+* `build`: Build tools/config changes
+* `ci`: CI/CD pipeline changes
 
 ### 📝 Example
 
 ```bash
-git commit -am "refactor(cryptography):
-> Improve code indentation."
+git commit -m "feat(comment):
+> Add reply-to-reply support"
 
-git commit -am "fix(login-page):
-> Fix null login issue."
+git commit -m "fix(auth):
+> Fix password validation bug"
 
-git commit -am "feat(carousel):
-> Add carousel to home page."
+git commit -m "docs(readme):
+> Update local run instructions"
 ```
 
 ---

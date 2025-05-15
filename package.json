@@ -1,0 +1,24 @@
+{
+  "name": "blogsport",
+  "version": "1.0.0",
+  "description": "---",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:tailwind": "npx tailwindcss -i ./src/main/resources/static/css/tailwind-input.css -o ./src/main/resources/static/css/tailwind.css --minify"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Luiz-Andalezio/BlogSport.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Luiz-Andalezio/BlogSport/issues"
+  },
+  "homepage": "https://github.com/Luiz-Andalezio/BlogSport#readme",
+  "devDependencies": {
+    "tailwindcss": "^3.4.1"
+  }
+}
