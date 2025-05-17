@@ -1,0 +1,16 @@
+<div class="w-64 bg-green-600 text-white flex flex-col min-h-screen">
+    <div class="p-6 text-2xl font-bold border-b border-green-700">BlogSport</div>
+    <nav class="flex-1 p-4">
+        <div>
+            <button class="flex items-center w-full justify-between font-semibold py-2 px-2 hover:bg-green-700 rounded" 
+                    hx-get="/categories" hx-target="#categories-list" hx-swap="innerHTML">
+                Categories
+                <span>&#9660;</span>
+            </button>
+            <div id="categories-list" class="ml-4 mt-2">
+                <!-- Categories and posts will be here via htmx -->
+            </div>
+        </div>
+        <a href="/account" class="block mt-6 py-2 px-2 hover:bg-green-700 rounded">My Account</a>
+    </nav>
+</div>
