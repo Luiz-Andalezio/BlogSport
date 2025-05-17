@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title th:replace="${title}">BlogSport</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/tailwind.css">
 </head>
+
 <body class="bg-white min-h-screen flex">
     <!-- Sidebar navbar -->
     <div th:replace="fragments/navbar :: navbar"></div>
@@ -15,8 +17,11 @@
         <div th:replace="fragments/topbar :: topbar"></div>
         <!-- Dynamic page content -->
         <main class="p-6">
-            <div th:replace="${content}"></div>
+            <div th:fragment="content">
+                <!-- Default content can be empty -->
+            </div>
         </main>
     </div>
 </body>
+
 </html>
