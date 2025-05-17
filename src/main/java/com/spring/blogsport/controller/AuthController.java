@@ -4,6 +4,10 @@ import com.spring.blogsport.model.User;
 import com.spring.blogsport.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,8 +21,8 @@ public class AuthController {
 
     @GetMapping("/login")
     public String loginPage(@RequestParam(value = "mode", defaultValue = "login") String mode,
-                            @RequestParam(value = "success", required = false) String success,
-                            Model model) {
+            @RequestParam(value = "success", required = false) String success,
+            Model model) {
         model.addAttribute("mode", mode);
         model.addAttribute("success", success);
         return "login";
@@ -26,9 +30,9 @@ public class AuthController {
 
     @PostMapping("/register")
     public String register(@ModelAttribute @Valid User user,
-                           BindingResult result,
-                           @RequestParam("confirmPassword") String confirmPassword,
-                           Model model) {
+            BindingResult result,
+            @RequestParam("confirmPassword") String confirmPassword,
+            Model model) {
         if (result.hasErrors() || !user.getPassword().equals(confirmPassword)) {
             model.addAttribute("mode", "register");
             model.addAttribute("error", "Please check your data. Passwords must match.");

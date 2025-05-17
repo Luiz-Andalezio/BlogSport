@@ -39,7 +39,6 @@ public class UserController {
         User user = userService.findByEmail(userDetails.getUsername()).orElseThrow();
         model.addAttribute("user", user);
         model.addAttribute("comments", commentService.getCommentsByUserId(user.getId()));
-        // Você pode adicionar método para pegar curtidas se desejar
         return "account";
     }
 
@@ -75,7 +74,7 @@ public class UserController {
         User user = userService.findByEmail(userDetails.getUsername()).orElseThrow();
 
         // TODO: Save the file and set the path in user.setProfileImage(...)
-        // Exemplo: String path = fileStorageService.save(file);
+        // Exemple: String path = fileStorageService.save(file);
         // user.setProfileImage(path);
 
         userService.updateUser(user.getId(), user);
