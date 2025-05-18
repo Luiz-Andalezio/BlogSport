@@ -18,7 +18,9 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(Model model) {
+        model.addAttribute("pageTitle", "Home - BlogSport");
         model.addAttribute("posts", postService.getAllPosts());
-        return "posts";
+        model.addAttribute("contentFragment", "posts :: content");
+        return "layout";
     }
 }

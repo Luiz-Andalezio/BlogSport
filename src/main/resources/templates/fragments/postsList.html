@@ -1,0 +1,6 @@
+<div th:fragment="postsList">
+    <div th:each="post : ${posts}">
+        <a th:href="@{/posts/{id}(id=${post.id})}" class="block py-1 px-2 hover:bg-green-900 rounded text-sm" th:text="${post.title}">Post Title</a>
+    </div>
+    <button class="text-green-200 hover:underline mt-2 text-xs">See more</button>
+</div>

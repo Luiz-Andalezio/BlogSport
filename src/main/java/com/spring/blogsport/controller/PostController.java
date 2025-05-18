@@ -27,8 +27,8 @@ public class PostController {
 
     @Autowired
     public PostController(PostService postService,
-                          UserService userService,
-                          CategoryService categoryService) {
+            UserService userService,
+            CategoryService categoryService) {
         this.postService = postService;
         this.userService = userService;
         this.categoryService = categoryService;
@@ -39,7 +39,9 @@ public class PostController {
     public String listPosts(Model model) {
         List<Post> posts = postService.getAllPosts();
         model.addAttribute("posts", posts);
-        return "posts";
+        model.addAttribute("pageTitle", "Posts - BlogSport");
+        model.addAttribute("contentFragment", "posts :: content");
+        return "layout";
     }
 
     // Displays form to create a new post
@@ -53,10 +55,10 @@ public class PostController {
     // Handles form submission to create a post
     @PostMapping
     public String savePost(@ModelAttribute @Valid Post post,
-                           BindingResult result,
-                           @RequestParam("categoryId") Long categoryId,
-                           @AuthenticationPrincipal UserDetails userDetails,
-                           Model model) {
+            BindingResult result,
+            @RequestParam("categoryId") Long categoryId,
+            @AuthenticationPrincipal UserDetails userDetails,
+            Model model) {
         if (result.hasErrors()) {
             model.addAttribute("categories", categoryService.getAllCategories());
             return "postForm";
@@ -87,11 +89,11 @@ public class PostController {
     // Updates the post
     @PostMapping("/{id}/edit")
     public String updatePost(@PathVariable Long id,
-                             @ModelAttribute @Valid Post updatedPost,
-                             BindingResult result,
-                             @RequestParam("categoryId") Long categoryId,
-                             @AuthenticationPrincipal UserDetails userDetails,
-                             Model model) {
+            @ModelAttribute @Valid Post updatedPost,
+            BindingResult result,
+            @RequestParam("categoryId") Long categoryId,
+            @AuthenticationPrincipal UserDetails userDetails,
+            Model model) {
         if (result.hasErrors()) {
             model.addAttribute("categories", categoryService.getAllCategories());
             return "postForm";

@@ -20,8 +20,8 @@ public class PostService {
 
     @Autowired
     public PostService(PostRepository postRepository,
-                       UserRepository userRepository,
-                       CategoryRepository categoryRepository) {
+            UserRepository userRepository,
+            CategoryRepository categoryRepository) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
@@ -71,5 +71,10 @@ public class PostService {
     // Deletes a post
     public void deletePost(Long id) {
         postRepository.deleteById(id);
+    }
+
+    // Returns the 5 most recent posts for a category
+    public List<Post> getRecentPostsByCategory(Long categoryId) {
+        return postRepository.findTop5ByCategoryIdOrderByCreatedAtDesc(categoryId);
     }
 }

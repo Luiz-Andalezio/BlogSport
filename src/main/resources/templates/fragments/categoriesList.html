@@ -1,0 +1,15 @@
+<div th:fragment="categoriesList">
+    <div th:each="category : ${categories}">
+        <button 
+            class="flex justify-between items-center w-full px-2 py-1 rounded hover:bg-green-800 mt-1"
+            hx-get="@{/categories/{id}/posts/sidebar(id=${category.id})}"
+            hx-target="#posts-list-[[${category.id}]]"
+            hx-swap="toggle">
+            <span th:text="${category.name}">Category</span>
+            <span>&#9654;</span>
+        </button>
+        <div id="posts-list-[[${category.id}]]" class="ml-4 mt-1 hidden">
+            <!-- Posts for this category will be loaded here by htmx -->
+        </div>
+    </div>
+</div>

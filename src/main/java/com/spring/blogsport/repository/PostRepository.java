@@ -12,4 +12,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     // Returns all posts by category ID
     List<Post> findByCategoryId(Long categoryId);
+
+    // Retuns top5 posts by category ID order by created at descending
+    List<Post> findTop5ByCategoryIdOrderByCreatedAtDesc(Long categoryId);
 }
