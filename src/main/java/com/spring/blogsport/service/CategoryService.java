@@ -1,7 +1,10 @@
 package com.spring.blogsport.service;
 
 import com.spring.blogsport.model.Category;
+import com.spring.blogsport.model.Post;
 import com.spring.blogsport.repository.CategoryRepository;
+import com.spring.blogsport.repository.PostRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,5 +46,30 @@ public class CategoryService {
     // Deletes a category
     public void deleteCategory(Long id) {
         categoryRepository.deleteById(id);
+    }
+
+    // Search the 5 most recent posts for each category
+    /*@Autowired
+    private PostService postService;
+
+    public List<Category> getAllCategoriesWithRecentPosts() {
+        List<Category> categories = categoryRepository.findAll();
+        for (Category category : categories) {
+            List<Post> posts = postService.getRecentPostsByCategory(category.getId());
+            category.setPosts(posts);
+        }
+        return categories;
+    }*/
+
+    @Autowired
+    private PostRepository postRepository;
+
+    public List<Category> getAllCategoriesWithRecentPosts() {
+        List<Category> categories = categoryRepository.findAll();
+        for (Category category : categories) {
+            List<Post> posts = postRepository.findTop5ByCategoryOrderByCreatedAtDesc(category);
+            category.setRecentPosts(posts);
+        }
+        return categories;
     }
 }
