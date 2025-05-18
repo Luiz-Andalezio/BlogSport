@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title th:text="${pageTitle}"></title>
+    <title th:text="${pageTitle}">BlogSport</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/tailwind.css">
 </head>
@@ -17,12 +17,11 @@
         <div th:replace="fragments/topbar :: topbar"></div>
         <!-- Dynamic page content -->
         <main class="p-6">
-            <div th:replace="${contentFragment}">
-                <!-- Default content can be empty and will be inserted here -->
-            </div>
+            <div th:replace="fragments/postsList :: postsList"></div>
         </main>
     </div>
-    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10">
+    </script><script src="/js/categoryArrow.js"></script>
 </body>
 
 </html>

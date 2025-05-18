@@ -20,7 +20,6 @@ public class HomeController {
     public String home(Model model) {
         model.addAttribute("pageTitle", "Home - BlogSport");
         model.addAttribute("posts", postService.getAllPosts());
-        model.addAttribute("contentFragment", "posts :: content");
-        return "layout";
+        return "index";
     }
 }

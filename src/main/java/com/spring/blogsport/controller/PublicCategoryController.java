@@ -24,12 +24,12 @@ public class PublicCategoryController {
     @GetMapping("/categories/sidebar")
     public String sidebarCategories(Model model) {
         model.addAttribute("categories", categoryService.getAllCategories());
-        return "fragments/categories-list :: categoriesList";
+        return "fragments/categoriesList :: categoriesList";
     }
 
     @GetMapping("/categories/{id}/posts/sidebar")
     public String sidebarCategoryPosts(@PathVariable Long id, Model model) {
         model.addAttribute("posts", postService.getRecentPostsByCategory(id));
-        return "fragments/posts-list :: postsList";
+        return "fragments/sidebarPostList :: sidebarPostsList";
     }
 }

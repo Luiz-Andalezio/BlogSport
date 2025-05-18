@@ -1,6 +1,15 @@
 <div th:fragment="postsList">
-    <div th:each="post : ${posts}">
-        <a th:href="@{/posts/{id}(id=${post.id})}" class="block py-1 px-2 hover:bg-green-900 rounded text-sm" th:text="${post.title}">Post Title</a>
+    <h1 class="text-3xl font-bold mb-6">Latest Posts</h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div th:each="post : ${posts}" class="bg-white rounded-lg shadow p-4 flex flex-col">
+            <a th:href="@{/posts/{id}(id=${post.id})}" class="text-xl font-semibold text-green-700 hover:underline" th:text="${post.title}">Post Title</a>
+            <div class="text-gray-500 text-sm mt-1">
+                <span th:text="${post.category?.name}">Category</span> &middot;
+                <span th:text="${post.createdAt}">Date</span> &middot;
+                <span th:text="${post.user?.name}">Author</span>
+            </div>
+            <p class="mt-2 text-gray-700 line-clamp-3" th:text="${post.content}">Post excerpt...</p>
+            <a th:href="@{/posts/{id}(id=${post.id})}" class="mt-4 text-green-600 hover:underline text-sm">Read more</a>
+        </div>
     </div>
-    <button class="text-green-200 hover:underline mt-2 text-xs">See more</button>
 </div>
