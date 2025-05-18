@@ -1,20 +1,11 @@
 <div th:fragment="navbar" class="w-64 bg-green-600 text-white flex flex-col min-h-screen">
     <div class="p-6 text-2xl font-bold border-b border-green-700 font-sans tracking-wide">BlogSport</div>
     <nav class="flex-1 p-4">
+        <!-- <a href="/account" class="block mt-6 py-2 px-2 hover:bg-green-700 rounded">My Account</a> -->
+        <div class="text-lg font-semibold mb-4" style="margin-bottom: 10px; margin-left: 5px; font-size: large;">
+            Categories:</div>
         <div>
-            <button 
-                class="flex items-center w-full justify-between font-semibold py-2 px-2 hover:bg-green-700 rounded"
-                hx-get="/categories/sidebar"
-                hx-target="#categories-list"
-                hx-swap="innerHTML"
-                aria-expanded="false">
-                Categories
-                <span class="category-arrow">►</span>
-            </button>
-            <div id="categories-list" class="ml-4 mt-2 hidden">
-                <!-- Categories will be loaded here by htmx -->
-            </div>
+            <div th:replace="fragments/categoriesList :: categoriesList"></div>
         </div>
-        <a href="/account" class="block mt-6 py-2 px-2 hover:bg-green-700 rounded">My Account</a>
     </nav>
 </div>
