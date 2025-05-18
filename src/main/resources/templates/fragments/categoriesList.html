@@ -1,17 +1,21 @@
 <div th:fragment="categoriesList">
     <ul>
         <li th:each="category : ${categories}" class="mb-2">
-            <!-- adjusts hx-target to use the correct Thymeleaf syntax for dynamic id: -->
-            <button 
-                class="flex items-center justify-between w-full py-1 px-2 rounded hover:bg-green-700"
-                th:attr="hx-get=@{/categories/{id}/posts/sidebar(id=${category.id})},hx-target='#posts-list-cat__' + ${category.id}"
-                hx-swap="toggle"
-                aria-expanded="false">
+            <button type="button" class="flex items-center justify-between w-full py-1 px-2 rounded hover:bg-green-700"
+                th:attr="data-category-id=${category.id}">
                 <span th:text="${category.name}">Category Name</span>
-                <span class="category-arrow">&#9654;</span>
+                <span class="category-arrow">►</span>
             </button>
             <div th:attr="id='posts-list-cat__' + ${category.id}" class="ml-4 mt-1 hidden">
-                <!-- Posts for this category will be loaded here by htmx -->
+                <!-- Posts for this category will be loaded here -->
+                <ul>
+                    <li th:each="post : ${category.posts}" class="mb-1">
+                        <a th:href="@{/posts/{id}(id=${post.id})}" class="text-green-100 hover:underline"
+                            th:text="${post.title}">Post Title</a>
+                    </li>
+                </ul>
+                <a th:href="@{/categories/{id}(id=${category.id})}"
+                    class="mt-2 text-xs text-green-200 hover:underline">See more</a>
             </div>
         </li>
     </ul>

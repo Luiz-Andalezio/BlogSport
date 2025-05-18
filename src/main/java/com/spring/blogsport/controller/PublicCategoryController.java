@@ -23,7 +23,7 @@ public class PublicCategoryController {
     // htmx endpoint for sidebar categories
     @GetMapping("/categories/sidebar")
     public String sidebarCategories(Model model) {
-        model.addAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute("categories", categoryService.getAllCategoriesWithRecentPosts());
         return "fragments/categoriesList :: categoriesList";
     }
 
