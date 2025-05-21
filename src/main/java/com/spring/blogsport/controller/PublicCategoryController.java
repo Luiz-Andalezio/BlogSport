@@ -1,12 +1,17 @@
 package com.spring.blogsport.controller;
 
-import com.spring.blogsport.service.CategoryService;
-import com.spring.blogsport.service.PostService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+
+import com.spring.blogsport.model.Category;
+import com.spring.blogsport.model.Post;
+import com.spring.blogsport.service.CategoryService;
+import com.spring.blogsport.service.PostService;
 
 @Controller
 public class PublicCategoryController {
@@ -31,5 +36,16 @@ public class PublicCategoryController {
     public String sidebarCategoryPosts(@PathVariable Long id, Model model) {
         model.addAttribute("posts", postService.getRecentPostsByCategory(id));
         return "fragments/sidebarPostList :: sidebarPostsList";
+    }
+
+    @GetMapping("/categories/{id}")
+    public String categoryPosts(@PathVariable Long id, Model model) {
+        Category category = categoryService.getCategoryById(id);
+        List<Post> posts = postService.getPostsByCategoryId(id);
+        model.addAttribute("category", category);
+        model.addAttribute("posts", posts);
+        sidebarCategories(model);
+        sidebarCategories(model);
+        return "categoryPostsList";
     }
 }
