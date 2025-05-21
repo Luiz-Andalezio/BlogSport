@@ -73,6 +73,7 @@ public class PostController {
     @GetMapping("/{id}")
     public String viewPost(@PathVariable Long id, Model model) {
         Post post = postService.getPostById(id);
+        model.addAttribute("categories", categoryService.getAllCategoriesWithRecentPosts());
         model.addAttribute("post", post);
         return "postDetails";
     }

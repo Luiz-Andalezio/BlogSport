@@ -29,7 +29,7 @@ public class CategoryController {
     public String listCategories(Model model) {
         List<Category> categories = categoryService.getAllCategories();
         model.addAttribute("categories", categories);
-        return "categoryList";
+        return "sidebarCategoriesList";
     }
 
     // Form for new category
