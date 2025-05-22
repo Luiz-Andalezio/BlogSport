@@ -1,7 +1,7 @@
 <div th:fragment="topbar" class="flex items-center justify-between bg-white border-b border-gray-200 px-6 py-4">
     <!-- Search bar -->
     <form action="/search" method="get" class="w-3/5 relative">
-        <input type="text" name="q" placeholder="Search for categories or posts..."
+        <input id="search-input" type="text" name="q" placeholder="Search for categories or posts..."
             class="w-full px-4 py-2 border rounded" hx-get="/search/preview" hx-trigger="keyup changed delay:300ms"
             hx-target="#search-preview" hx-params="q" autocomplete="off" />
         <div id="search-preview" class="absolute bg-white border w-full z-10"></div>
