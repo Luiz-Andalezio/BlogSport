@@ -1,0 +1,38 @@
+<div th:fragment="preview">
+    <div style="padding-left: 10px;">
+        <div th:if="${#lists.isEmpty(posts)} and ${#lists.isEmpty(categories)}" class="py-4 text-gray-500 text-center">
+            No results found.
+        </div>
+        <div th:unless="${#lists.isEmpty(posts)} and ${#lists.isEmpty(categories)}">
+            <div class="mt-2" th:if="${!#lists.isEmpty(categories)}">
+                <h3 class="font-bold text-green-700 mb-1">Categories</h3>
+                <ul>
+                    <li th:each="category : ${categories}" style="list-style: none;">
+                        <div>
+                            <a th:href="@{/categories/{id}(id=${category.id})}" class="font-semibold hover:underline"
+                                th:text="${category.name}"></a>
+                        </div>
+                    </li>
+                </ul>
+                <div th:if="${categories.size() == 3}">
+                    <a th:href="@{/search(q=${query})}" class="text-green-600 hover:underline text-xs">...</a>
+                </div>
+            </div>
+            <div th:if="${!#lists.isEmpty(posts)}">
+                <h3 class="font-bold text-green-700 mb-1">Posts</h3>
+                <ul>
+                    <li th:each="post : ${posts}" style="list-style: none;">
+                        <a th:href="@{/posts/{id}(id=${post.id})}" class="font-semibold hover:underline"
+                            th:text="${post.title}"></a>
+                        <span class="text-xs text-gray-500 ml-2" th:text="${post.createdAt}"></span>
+                        <span class="text-xs text-gray-500 ml-2" th:text="${post.user.name}"></span>
+                    </li>
+                </ul>
+                <div th:if="${posts.size() == 3}">
+                    <a th:href="@{/search(q=${query})}" class="text-green-600 hover:underline text-xs">See all
+                        results...</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

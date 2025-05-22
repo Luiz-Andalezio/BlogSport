@@ -3,3 +3,7 @@ footer {
     font-size: 0.95em;
     color: #888;
 }
+
+#search-preview:empty {
+    display: none;
+}

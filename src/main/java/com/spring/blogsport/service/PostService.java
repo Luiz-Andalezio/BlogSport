@@ -77,4 +77,14 @@ public class PostService {
     public List<Post> getRecentPostsByCategory(Long categoryId) {
         return postRepository.findTop5ByCategoryIdOrderByCreatedAtDesc(categoryId);
     }
+
+    // Exemplo para PostService
+    public List<Post> searchPosts(String keyword, Integer limit) {
+        if (limit != null && limit == 3) {
+            return postRepository.findTop3ByTitleContainingIgnoreCaseOrContentContainingIgnoreCaseOrderByCreatedAtDesc(
+                    keyword, keyword);
+        } else {
+            return postRepository.searchByKeyword(keyword);
+        }
+    }
 }
