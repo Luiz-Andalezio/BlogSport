@@ -1,10 +1,9 @@
 <div th:fragment="sidebarCategoriesList">
     <ul class="space-y-4">
-        <li th:each="category : ${categories}" class="rounded-lg p-4 shadow border border-white"
+        <li th:each="category : ${sidebarCategories}" class="rounded-lg p-4 shadow border border-white"
             style="list-style: none;">
             <div class="flex items-center justify-between">
-                <p class="text-lg font-semibold" th:text="${category.name}">Category
-                    Name</p>
+                <p class="text-lg font-semibold" th:text="${category.name}">Category Name</p>
                 <a th:href="@{/categories/{id}(id=${category.id})}"
                     class="text-xs text-green-200 hover:underline ml-2">See all</a>
             </div>

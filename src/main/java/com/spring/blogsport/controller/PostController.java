@@ -1,5 +1,6 @@
 package com.spring.blogsport.controller;
 
+import com.spring.blogsport.model.Category;
 import com.spring.blogsport.model.Post;
 import com.spring.blogsport.model.User;
 import com.spring.blogsport.service.PostService;
@@ -73,6 +74,8 @@ public class PostController {
     @GetMapping("/{id}")
     public String viewPost(@PathVariable Long id, Model model) {
         Post post = postService.getPostById(id);
+        List<Category> sidebarCategories = categoryService.getAllCategoriesWithRecentPosts();
+        model.addAttribute("sidebarCategories", sidebarCategories);
         model.addAttribute("categories", categoryService.getAllCategoriesWithRecentPosts());
         model.addAttribute("post", post);
         return "postDetails";

@@ -42,9 +42,10 @@ public class PublicCategoryController {
     public String categoryPosts(@PathVariable Long id, Model model) {
         Category category = categoryService.getCategoryById(id);
         List<Post> posts = postService.getPostsByCategoryId(id);
+        List<Category> sidebarCategories = categoryService.getAllCategoriesWithRecentPosts();
+        model.addAttribute("sidebarCategories", sidebarCategories);
         model.addAttribute("category", category);
         model.addAttribute("posts", posts);
-        sidebarCategories(model);
         sidebarCategories(model);
         return "categoryPostsList";
     }

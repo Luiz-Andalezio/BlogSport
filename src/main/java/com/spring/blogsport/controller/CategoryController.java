@@ -27,8 +27,8 @@ public class CategoryController {
     // List all categories
     @GetMapping
     public String listCategories(Model model) {
-        List<Category> categories = categoryService.getAllCategories();
-        model.addAttribute("categories", categories);
+        List<Category> sidebarCategories = categoryService.getAllCategoriesWithRecentPosts();
+        model.addAttribute("sidebarCategories", sidebarCategories);
         return "sidebarCategoriesList";
     }
 

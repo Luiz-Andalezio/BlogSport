@@ -72,4 +72,12 @@ public class CategoryService {
         }
         return categories;
     }
+
+    public List<Category> searchCategories(String keyword, Integer limit) {
+        if (limit != null && limit == 3) {
+            return categoryRepository.findTop3ByNameContainingIgnoreCaseOrderByNameAsc(keyword);
+        } else {
+            return categoryRepository.searchByKeyword(keyword);
+        }
+    }
 }
