@@ -26,7 +26,6 @@ public class PostController {
     private final UserService userService;
     private final CategoryService categoryService;
 
-    @Autowired
     public PostController(PostService postService,
             UserService userService,
             CategoryService categoryService) {

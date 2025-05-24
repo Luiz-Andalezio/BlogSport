@@ -18,7 +18,6 @@ public class PostService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
 
-    @Autowired
     public PostService(PostRepository postRepository,
             UserRepository userRepository,
             CategoryRepository categoryRepository) {

@@ -18,7 +18,6 @@ public class HomeController {
     @Autowired
     private CategoryService categoryService;
 
-    @Autowired
     public HomeController(PostService postService) {
         this.postService = postService;
     }

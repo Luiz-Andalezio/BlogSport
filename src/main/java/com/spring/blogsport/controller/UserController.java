@@ -23,7 +23,6 @@ public class UserController {
     private final CommentService commentService;
     private final LikeService likeService;
 
-    @Autowired
     public UserController(UserService userService,
                              CommentService commentService,
                              LikeService likeService) {
