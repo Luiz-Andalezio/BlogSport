@@ -15,6 +15,18 @@
             </svg>
             <span class="absolute -top-2 -right-2 bg-green-600 text-white text-xs rounded-full px-2">2</span>
         </button>
-        <img src="/images/profile.png" alt="Profile" class="w-8 h-8 rounded-full border" />
+        <!-- if not logged -->
+        <div class="flex items-center space-x-4" th:if="${#authorization.expression('isAnonymous()')}">
+            <a href="/login?mode=login" class="text-green-700 font-semibold hover:underline">Sign in</a>
+            <a href="/login?mode=register" class="text-green-700 font-semibold hover:underline">Sign up</a>
+        </div>
+
+        <!-- if logged -->
+        <div class="flex items-center space-x-4" th:if="${#authorization.expression('isAuthenticated()')}">
+            <a href="/account">
+                <img th:src="${#authentication.principal.profileImage != null ? #authentication.principal.profileImage : '/images/profile.png'}"
+                    alt="Profile" class="w-8 h-8 rounded-full border" />
+            </a>
+        </div>
     </div>
 </div>

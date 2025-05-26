@@ -18,7 +18,6 @@ public class CommentController {
     private final CommentService commentService;
     private final UserService userService;
 
-    @Autowired
     public CommentController(CommentService commentService,
                              UserService userService) {
         this.commentService = commentService;

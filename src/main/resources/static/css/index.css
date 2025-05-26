@@ -1,9 +1,3 @@
-footer {
-    margin-top: 28.3%;
-    font-size: 0.95em;
-    color: #888;
-}
-
 #search-preview:empty {
     display: none;
 }

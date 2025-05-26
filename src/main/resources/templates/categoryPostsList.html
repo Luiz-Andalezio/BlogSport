@@ -11,7 +11,7 @@
 </head>
 
 <body class="bg-white min-h-screen flex">
-    <!-- Sidebar navbar -->
+    <!-- Left sidebar navbar -->
     <div th:replace="fragments/navbar :: navbar"></div>
     <!-- Main content area -->
     <div class="flex-1 flex flex-col">
@@ -43,5 +43,10 @@
         </div>
     </div>
 </body>
+
+<!-- Right acc management/admin management sidebar navbar -->
+<div th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+    <div th:replace="fragments/adminSidebar :: adminSidebar"></div>
+</div>
 
 </html>
