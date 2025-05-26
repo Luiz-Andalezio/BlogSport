@@ -18,7 +18,6 @@ public class LikeService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
-    @Autowired
     public LikeService(LikeRepository likeRepository,
                        PostRepository postRepository,
                        UserRepository userRepository) {

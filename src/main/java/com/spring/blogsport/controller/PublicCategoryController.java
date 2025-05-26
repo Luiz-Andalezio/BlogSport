@@ -19,7 +19,6 @@ public class PublicCategoryController {
     private final CategoryService categoryService;
     private final PostService postService;
 
-    @Autowired
     public PublicCategoryController(CategoryService categoryService, PostService postService) {
         this.categoryService = categoryService;
         this.postService = postService;

@@ -21,7 +21,17 @@ public class SecurityConfig {
     private static final String[] AUTH_LIST = {
             "/",
             "/posts",
-            "/posts/{id}"
+            "/posts/{id}",
+            "/categories",
+            "/categories/{id}",
+            "/categories/**",
+            "/search",
+            "/search/**",
+            "/css/**",
+            "/js/**",
+            "/images/**",
+            "/login",
+            "/register"
     };
 
     @Bean
