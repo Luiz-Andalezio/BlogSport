@@ -25,3 +25,21 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
+// to hide the profile dropdown when clicking outside
+document.addEventListener('DOMContentLoaded', function () {
+    const btn = document.getElementById('profile-btn');
+    const dropdown = document.getElementById('profile-dropdown');
+    if (btn && dropdown) {
+        btn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            dropdown.classList.toggle('hidden');
+        });
+        document.addEventListener('click', function () {
+            dropdown.classList.add('hidden');
+        });
+        dropdown.addEventListener('click', function (e) {
+            e.stopPropagation();
+        });
+    }
+});
