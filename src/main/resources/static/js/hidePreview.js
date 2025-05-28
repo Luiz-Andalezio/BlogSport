@@ -28,18 +28,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // to hide the profile dropdown when clicking outside
 document.addEventListener('DOMContentLoaded', function () {
-    const btn = document.getElementById('profile-btn');
-    const dropdown = document.getElementById('profile-dropdown');
-    if (btn && dropdown) {
+    document.querySelectorAll('.profile-btn').forEach(function(btn) {
+        const dropdown = btn.parentElement.querySelector('.profile-dropdown');
         btn.addEventListener('click', function (e) {
             e.stopPropagation();
             dropdown.classList.toggle('hidden');
         });
+
+        // hide the dropdown when clicking outside
         document.addEventListener('click', function () {
             dropdown.classList.add('hidden');
         });
+
+        // prevent the dropdown from closing when clicking inside it
         dropdown.addEventListener('click', function (e) {
             e.stopPropagation();
         });
-    }
+    });
 });

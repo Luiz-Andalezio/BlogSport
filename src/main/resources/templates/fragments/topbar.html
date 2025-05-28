@@ -18,14 +18,15 @@
         </div>
         <!-- if logged -->
         <div class="flex items-center space-x-4 relative" th:if="${#authorization.expression('isAuthenticated()')}">
-            <button id="profile-btn" type="button" class="focus:outline-none">
+            <button type="button" class="profile-btn focus:outline-none">
                 <img th:src="${#authentication.principal.profileImage != null ? #authentication.principal.profileImage : '/images/profile.png'}"
                     alt="Profile" class="w-8 h-8 rounded-full border" />
             </button>
-            <div id="profile-dropdown" class="hidden absolute right-0 mt-12 w-36 bg-white border rounded shadow z-50">
-                <a href="/account" class="block px-4 py-2 hover:bg-gray-100 text-gray-700">Account</a>
+            <div class="profile-dropdown hidden absolute right-0 mt-2 w-36 bg-white border rounded shadow z-50">
+                <a href="/account" class="block px-4 py-2 hover:bg-green-100 text-gray-700 transition">Account</a>
                 <form th:action="@{/logout}" method="post">
-                    <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700">Logout</button>
+                    <button type="submit"
+                        class="w-full text-left px-4 py-2 hover:bg-green-100 text-gray-700 transition">Logout</button>
                 </form>
             </div>
         </div>
