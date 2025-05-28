@@ -20,10 +20,10 @@
         <nav class="text-sm px-6 py-4 bg-gray-50 border-b border-gray-200 font-semibold"
             aria-label="Breadcrumb">
             <a href="/" class="text-green-700 hover:underline">Home</a>
-            <span class="mx-2 text-gray-400">&gt;<span>
+            <span class="text-gray-400">&gt;<span>
             <a th:href="@{/categories/{id}(id=${post.category.id})}" class="text-green-700 hover:underline"
                 th:text="${post.category.name}">Category</a>
-            <span class="mx-2 text-gray-400">&gt;<span>
+            <span class="text-gray-400">&gt;<span>
             <span class="text-gray-700" th:text="${post.title}">Post Title</span>
         </nav>
         <!-- Post Content -->
