@@ -24,10 +24,10 @@
             <a th:href="@{/categories/{id}(id=${post.category.id})}" class="text-green-700 hover:underline"
                 th:text="${post.category.name}">Category</a>
             <span class="mx-2 text-gray-400">&gt;<span>
-            <span class="text-red-600" th:text="${post.title}">Post Title</span>
+            <span class="text-gray-700" th:text="${post.title}">Post Title</span>
         </nav>
         <!-- Post Content -->
-        <main class="p-8 max-w-3xl mx-auto">
+        <main class="p-8 max-w-3xl">
             <h1 class="text-3xl font-bold text-green-700 mb-4" th:text="${post.title}">Post Title</h1>
             <div class="text-gray-500 text-sm mb-6 mt-1">
                 <span th:text="${post.category.name}">Category</span> &middot; 
