@@ -31,9 +31,9 @@ public class UserController {
     private final PostService postService;
 
     public UserController(UserService userService,
-                             CommentService commentService,
-                             CategoryService categoryService,
-                             PostService postService) {
+            CommentService commentService,
+            CategoryService categoryService,
+            PostService postService) {
         this.userService = userService;
         this.commentService = commentService;
         this.categoryService = categoryService;
@@ -43,7 +43,7 @@ public class UserController {
     // Show account overview
     @GetMapping
     public String viewAccount(@AuthenticationPrincipal UserDetails userDetails,
-                              Model model) {
+            Model model) {
 
         // posts and categories for sidebar
         List<Category> sidebarCategories = categoryService.getAllCategoriesWithRecentPosts();
@@ -51,7 +51,7 @@ public class UserController {
         model.addAttribute("categories", categoryService.getAllCategoriesWithRecentPosts());
         model.addAttribute("pageTitle", "Home - BlogSport");
         model.addAttribute("posts", postService.getAllPosts());
-        
+
         // user details
         User user = userService.findByEmail(userDetails.getUsername()).orElseThrow();
         model.addAttribute("user", user);
@@ -62,7 +62,14 @@ public class UserController {
     // Show edit form
     @GetMapping("/edit")
     public String showEditForm(@AuthenticationPrincipal UserDetails userDetails,
-                               Model model) {
+            Model model) {
+        // posts and categories for sidebar
+        List<Category> sidebarCategories = categoryService.getAllCategoriesWithRecentPosts();
+        model.addAttribute("sidebarCategories", sidebarCategories);
+        model.addAttribute("categories", categoryService.getAllCategoriesWithRecentPosts());
+        model.addAttribute("pageTitle", "Home - BlogSport");
+        model.addAttribute("posts", postService.getAllPosts());
+        
         User user = userService.findByEmail(userDetails.getUsername()).orElseThrow();
         model.addAttribute("user", user);
         return "accountEdit";
@@ -71,8 +78,8 @@ public class UserController {
     // Handle update
     @PostMapping("/edit")
     public String updateProfile(@ModelAttribute("user") @Valid User updatedUser,
-                                BindingResult result,
-                                @AuthenticationPrincipal UserDetails userDetails) {
+            BindingResult result,
+            @AuthenticationPrincipal UserDetails userDetails) {
         if (result.hasErrors()) {
             return "accountEdit";
         }
@@ -87,7 +94,7 @@ public class UserController {
     // Handle image upload (optional enhancement)
     @PostMapping("/upload")
     public String uploadProfilePicture(@RequestParam("file") MultipartFile file,
-                                       @AuthenticationPrincipal UserDetails userDetails) {
+            @AuthenticationPrincipal UserDetails userDetails) {
         User user = userService.findByEmail(userDetails.getUsername()).orElseThrow();
 
         // TODO: Save the file and set the path in user.setProfileImage(...)
@@ -96,5 +103,21 @@ public class UserController {
 
         userService.updateUser(user.getId(), user);
         return "redirect:/account";
+    }
+
+    @GetMapping("/edit-password")
+    public String showEditPassword(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        // posts and categories for sidebar
+        List<Category> sidebarCategories = categoryService.getAllCategoriesWithRecentPosts();
+        model.addAttribute("sidebarCategories", sidebarCategories);
+        model.addAttribute("categories", categoryService.getAllCategoriesWithRecentPosts());
+        model.addAttribute("pageTitle", "Home - BlogSport");
+        model.addAttribute("posts", postService.getAllPosts());
+
+        // user details
+        User user = userService.findByEmail(userDetails.getUsername()).orElseThrow();
+        model.addAttribute("user", user);
+        model.addAttribute("comments", commentService.getCommentsByUserId(user.getId()));
+        return "accountEditPassword";
     }
 }
