@@ -1,0 +1,21 @@
+<div th:fragment="accountEditPasswordForm">
+    <form th:action="@{/account/edit-password}" method="post" class="space-y-4">
+        <div th:if="${error}" class="bg-red-100 text-red-700 px-4 py-2 rounded">
+            <span th:text="${error}"></span>
+        </div>
+        <div>
+            <label>Current Password: <span class="text-red-600">*</span></label>
+            <input type="password" name="currentPassword" required class="border rounded px-3 py-2 w-full">
+        </div>
+        <div>
+            <label>New Password:</label>
+            <input type="password" name="newPassword" required class="border rounded px-3 py-2 w-full">
+        </div>
+        <div>
+            <label>Confirm New Password:</label>
+            <input type="password" name="confirmPassword" required class="border rounded px-3 py-2 w-full">
+        </div>
+        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Change Password</button>
+        <a href="/account" class="ml-4 text-gray-600 hover:underline">Cancel</a>
+    </form>
+</div>
