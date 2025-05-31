@@ -28,13 +28,13 @@ public class PublicCategoryController {
     @GetMapping("/categories/sidebar")
     public String sidebarCategories(Model model) {
         model.addAttribute("categories", categoryService.getAllCategoriesWithRecentPosts());
-        return "fragments/categoriesList :: categoriesList";
+        return "categoriesList :: categoriesList";
     }
 
     @GetMapping("/categories/{id}/posts/sidebar")
     public String sidebarCategoryPosts(@PathVariable Long id, Model model) {
         model.addAttribute("posts", postService.getRecentPostsByCategory(id));
-        return "fragments/sidebarPostList :: sidebarPostsList";
+        return "posts/fragments/sidebarPostList :: sidebarPostsList";
     }
 
     @GetMapping("/categories/{id}")
@@ -46,6 +46,6 @@ public class PublicCategoryController {
         model.addAttribute("category", category);
         model.addAttribute("posts", posts);
         sidebarCategories(model);
-        return "categoryPostsList";
+        return "posts/categoryPostsList";
     }
 }

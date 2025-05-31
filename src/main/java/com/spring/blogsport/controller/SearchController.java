@@ -1,6 +1,5 @@
 package com.spring.blogsport.controller;
 
-import com.spring.blogsport.controller.PublicCategoryController;
 import com.spring.blogsport.model.Category;
 import com.spring.blogsport.model.Post;
 import com.spring.blogsport.service.CategoryService;
@@ -20,8 +19,6 @@ public class SearchController {
     private PostService postService;
     @Autowired
     private CategoryService categoryService;
-    @Autowired
-    private PublicCategoryController publicCategoryController;
 
     @GetMapping("/search/preview")
     public String searchPreview(@RequestParam("q") String query, Model model) {
@@ -30,7 +27,7 @@ public class SearchController {
         model.addAttribute("posts", posts);
         model.addAttribute("categories", categories);
         model.addAttribute("query", query);
-        return "fragments/searchPreview :: preview";
+        return "search/fragments/searchPreview :: preview";
     }
 
     @GetMapping("/search")
@@ -44,6 +41,6 @@ public class SearchController {
         model.addAttribute("sidebarCategories", sidebarCategories);
         model.addAttribute("query", query);
 
-        return "searchResults";
+        return "search/searchResults";
     }
 }
