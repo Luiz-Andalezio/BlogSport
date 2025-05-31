@@ -28,7 +28,7 @@ public class CategoryController {
     public String listCategories(Model model) {
         List<Category> sidebarCategories = categoryService.getAllCategoriesWithRecentPosts();
         model.addAttribute("sidebarCategories", sidebarCategories);
-        return "sidebarCategoriesList";
+        return "posts/fragments/sidebarCategoriesList";
     }
 
     // Form for new category

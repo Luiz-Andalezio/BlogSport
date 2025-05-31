@@ -77,7 +77,7 @@ public class PostController {
         model.addAttribute("sidebarCategories", sidebarCategories);
         model.addAttribute("categories", categoryService.getAllCategoriesWithRecentPosts());
         model.addAttribute("post", post);
-        return "postDetails";
+        return "posts/postDetails";
     }
 
     // Displays form to edit an existing post
