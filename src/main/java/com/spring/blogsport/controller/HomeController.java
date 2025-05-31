@@ -29,6 +29,6 @@ public class HomeController {
         model.addAttribute("categories", categoryService.getAllCategoriesWithRecentPosts());
         model.addAttribute("pageTitle", "Home - BlogSport");
         model.addAttribute("posts", postService.getAllPosts());
-        return "index";
+        return "home/index";
     }
 }

@@ -18,13 +18,18 @@ public class SecurityConfig {
 
     private static final String[] AUTH_LIST = {
             "/",
+            "/home",
+            "/home/**",
             "/posts",
+            "/posts/**",
             "/posts/{id}",
             "/categories",
             "/categories/{id}",
             "/categories/**",
             "/search",
             "/search/**",
+            "/user",
+            "/user/**",
             "/css/**",
             "/js/**",
             "/images/**",

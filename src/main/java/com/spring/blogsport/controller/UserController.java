@@ -56,7 +56,7 @@ public class UserController {
         User user = userService.findByEmail(userDetails.getUsername()).orElseThrow();
         model.addAttribute("user", user);
         model.addAttribute("comments", commentService.getCommentsByUserId(user.getId()));
-        return "account";
+        return "user/account";
     }
 
     // Show edit form
@@ -72,7 +72,7 @@ public class UserController {
         
         User user = userService.findByEmail(userDetails.getUsername()).orElseThrow();
         model.addAttribute("user", user);
-        return "accountEdit";
+        return "user/accountEdit";
     }
 
     // Handle update
@@ -81,7 +81,7 @@ public class UserController {
             BindingResult result,
             @AuthenticationPrincipal UserDetails userDetails) {
         if (result.hasErrors()) {
-            return "accountEdit";
+            return "user/accountEdit";
         }
 
         User currentUser = userService.findByEmail(userDetails.getUsername()).orElseThrow();
@@ -118,6 +118,6 @@ public class UserController {
         User user = userService.findByEmail(userDetails.getUsername()).orElseThrow();
         model.addAttribute("user", user);
         model.addAttribute("comments", commentService.getCommentsByUserId(user.getId()));
-        return "accountEditPassword";
+        return "user/accountEditPassword";
     }
 }
