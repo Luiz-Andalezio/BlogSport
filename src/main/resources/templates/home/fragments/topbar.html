@@ -1,0 +1,31 @@
+<div th:fragment="topbar" class="flex items-center justify-between bg-white border-b border-gray-200 px-6 py-4">
+    <!-- Search bar -->
+    <form action="/search" method="get" class="w-3/5 relative">
+        <input id="search-input" type="text" name="q" placeholder="Search for categories or posts..."
+            class="w-full px-4 py-2 border rounded" hx-get="/search/preview" hx-trigger="keyup changed delay:300ms"
+            hx-target="#search-preview" hx-params="q" autocomplete="off" />
+        <div id="search-preview" class="absolute bg-white border w-full z-10"></div>
+    </form>
+    <!-- Notifications and profile -->
+    <div class="flex items-center space-x-4">
+        <button class="relative" title="Notifications">
+            <!-- ...notificações... -->
+        </button>
+        <!-- if not logged -->
+        <div class="flex items-center space-x-4" th:if="${#authorization.expression('isAnonymous()')}">
+            <a href="/login?mode=login" class="text-green-700 font-semibold hover:underline">Sign in</a>
+            <a href="/login?mode=register" class="text-green-700 font-semibold hover:underline">Sign up</a>
+        </div>
+        <!-- if logged -->
+        <div class="flex items-center space-x-4" th:if="${#authorization.expression('isAuthenticated()')}">
+            <img th:src="${#authentication.principal.profileImage != null ? #authentication.principal.profileImage : '/images/profile.png'}"
+                alt="Profile" class="w-8 h-8 rounded-full border" />
+            <a href="/account"
+                class="px-3 py-2 rounded bg-green-600 text-white hover:bg-green-700 transition">Account</a>
+            <form th:action="@{/logout}" method="post" class="inline">
+                <button type="submit"
+                    class="px-3 py-2 rounded text-white transition bg-gray-500 hover:bg-gray-700">Logout</button>
+            </form>
+        </div>
+    </div>
+</div>

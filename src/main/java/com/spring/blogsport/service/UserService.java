@@ -15,9 +15,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Autowired
     public UserService(UserRepository userRepository,
-                       PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -25,6 +24,9 @@ public class UserService {
     // Registers a new user with encrypted password
     public User registerUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (user.getRole() == null) {
+            user.setRole(User.Role.USER);
+        }
         return userRepository.save(user);
     }
 

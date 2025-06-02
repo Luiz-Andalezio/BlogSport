@@ -26,4 +26,15 @@ public class Category {
     // One category to many posts
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts;
+
+    @Transient
+    private List<Post> recentPosts;
+
+    public List<Post> getRecentPosts() {
+        return recentPosts;
+    }
+
+    public void setRecentPosts(List<Post> recentPosts) {
+        this.recentPosts = recentPosts;
+    }
 }

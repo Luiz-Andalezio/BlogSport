@@ -1,5 +1,6 @@
 package com.spring.blogsport.controller;
 
+import com.spring.blogsport.model.Category;
 import com.spring.blogsport.model.Post;
 import com.spring.blogsport.model.User;
 import com.spring.blogsport.service.PostService;
@@ -25,10 +26,9 @@ public class PostController {
     private final UserService userService;
     private final CategoryService categoryService;
 
-    @Autowired
     public PostController(PostService postService,
-                          UserService userService,
-                          CategoryService categoryService) {
+            UserService userService,
+            CategoryService categoryService) {
         this.postService = postService;
         this.userService = userService;
         this.categoryService = categoryService;
@@ -39,7 +39,9 @@ public class PostController {
     public String listPosts(Model model) {
         List<Post> posts = postService.getAllPosts();
         model.addAttribute("posts", posts);
-        return "posts";
+        model.addAttribute("pageTitle", "Posts - BlogSport");
+        model.addAttribute("contentFragment", "posts :: content");
+        return "layout";
     }
 
     // Displays form to create a new post
@@ -53,10 +55,10 @@ public class PostController {
     // Handles form submission to create a post
     @PostMapping
     public String savePost(@ModelAttribute @Valid Post post,
-                           BindingResult result,
-                           @RequestParam("categoryId") Long categoryId,
-                           @AuthenticationPrincipal UserDetails userDetails,
-                           Model model) {
+            BindingResult result,
+            @RequestParam("categoryId") Long categoryId,
+            @AuthenticationPrincipal UserDetails userDetails,
+            Model model) {
         if (result.hasErrors()) {
             model.addAttribute("categories", categoryService.getAllCategories());
             return "postForm";
@@ -71,8 +73,11 @@ public class PostController {
     @GetMapping("/{id}")
     public String viewPost(@PathVariable Long id, Model model) {
         Post post = postService.getPostById(id);
+        List<Category> sidebarCategories = categoryService.getAllCategoriesWithRecentPosts();
+        model.addAttribute("sidebarCategories", sidebarCategories);
+        model.addAttribute("categories", categoryService.getAllCategoriesWithRecentPosts());
         model.addAttribute("post", post);
-        return "postDetails";
+        return "posts/postDetails";
     }
 
     // Displays form to edit an existing post
@@ -87,11 +92,11 @@ public class PostController {
     // Updates the post
     @PostMapping("/{id}/edit")
     public String updatePost(@PathVariable Long id,
-                             @ModelAttribute @Valid Post updatedPost,
-                             BindingResult result,
-                             @RequestParam("categoryId") Long categoryId,
-                             @AuthenticationPrincipal UserDetails userDetails,
-                             Model model) {
+            @ModelAttribute @Valid Post updatedPost,
+            BindingResult result,
+            @RequestParam("categoryId") Long categoryId,
+            @AuthenticationPrincipal UserDetails userDetails,
+            Model model) {
         if (result.hasErrors()) {
             model.addAttribute("categories", categoryService.getAllCategories());
             return "postForm";

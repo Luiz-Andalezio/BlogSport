@@ -19,7 +19,6 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @Autowired
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
     }
@@ -27,9 +26,9 @@ public class CategoryController {
     // List all categories
     @GetMapping
     public String listCategories(Model model) {
-        List<Category> categories = categoryService.getAllCategories();
-        model.addAttribute("categories", categories);
-        return "categoryList";
+        List<Category> sidebarCategories = categoryService.getAllCategoriesWithRecentPosts();
+        model.addAttribute("sidebarCategories", sidebarCategories);
+        return "posts/fragments/sidebarCategoriesList";
     }
 
     // Form for new category

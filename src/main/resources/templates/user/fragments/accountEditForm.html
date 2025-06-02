@@ -1,0 +1,32 @@
+<div th:fragment="accountEditForm">
+    <form th:action="@{/account/edit}" method="post" enctype="multipart/form-data" class="space-y-4">
+        <div th:if="${error}" class="bg-red-100 text-red-700 px-4 py-2 rounded">
+            <span th:text="${error}"></span>
+        </div>
+        <div>
+            <label>Name:</label>
+            <input type="text" name="name" th:value="${user.name}" required class="border rounded px-3 py-2 w-full">
+        </div>
+        <div>
+            <label>Email:</label>
+            <input type="email" name="email" th:value="${user.email}" required class="border rounded px-3 py-2 w-full">
+        </div>
+        <div>
+            <label>Birth date:</label>
+            <input type="date" name="birthDate" th:value="${user.birthDate}" class="border rounded px-3 py-2 w-full">
+        </div>
+        <div>
+            <label>Profile Image:</label>
+            <input type="file" name="file" class="border rounded px-3 py-2 w-full">
+        </div>
+        <div>
+            <label>Current Password: <span class="text-red-600">*</span></label>
+            <input type="password" name="currentPassword" required class="border rounded px-3 py-2 w-full">
+        </div>
+        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Save Changes</button>
+        <a href="/account" class="ml-4 text-gray-600 hover:underline">Cancel</a>
+    </form>
+    <div class="mt-8">
+        <a href="/account/edit-password" class="text-green-700 hover:underline">Change Password</a>
+    </div>
+</div>
