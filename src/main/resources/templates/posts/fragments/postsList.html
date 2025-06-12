@@ -1,15 +1,36 @@
 <div th:fragment="postsList">
-    <h1 class="text-3xl font-bold mb-6">Latest Posts</h1>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div th:each="post : ${posts}" class="bg-white rounded-lg shadow p-4 flex flex-col">
-            <a class="text-xl font-semibold text-green-700" th:text="${post.title}">Post Title</a>
-            <div class="text-gray-500 text-sm mt-1">
-                <span th:text="${post.category.name}">Category</span> &middot;
-                <span th:text="${post.createdAt}">Date</span> &middot;
-                <span th:text="${post.user.name}">Author</span>
-            </div>
-            <p class="mt-2 text-gray-700 line-clamp-3" th:text="${post.content}">Post excerpt...</p>
-            <a th:href="@{/posts/{id}(id=${post.id})}" class="mt-4 text-green-600 hover:underline text-sm">Read more</a>
-        </div>
+  <h1 class="text-3xl font-bold mb-6">Latest Posts</h1>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div
+      th:each="post : ${posts}"
+      class="bg-white rounded-lg shadow p-4 flex flex-col"
+    >
+      <a class="text-xl font-semibold text-green-700" th:text="${post.title}"
+        >Post Title</a
+      >
+      <div class="text-gray-500 text-sm mt-1">
+        <span th:text="${post.category.name}">Category</span> &middot;
+        <span th:text="${post.createdAt}">Date</span> &middot;
+        <span th:text="${post.user.name}">Author</span>
+      </div>
+      <p class="mt-2 text-gray-700 line-clamp-3" th:text="${post.content}">
+        Post excerpt...
+      </p>
+      <a
+        th:href="@{/posts/{id}(id=${post.id})}"
+        class="mt-4 text-green-600 hover:underline text-sm"
+        >Read more</a
+      >
+      <div class="post-actions mt-4 flex items-center gap-4">
+        <form th:action="@{/posts/{id}/like(id=${post.id})}" method="post">
+          <button type="submit" class="btn btn-like">
+            👍(<span th:text="${post.likeCount}">0</span>)
+          </button>
+        </form>
+        <a th:href="@{/posts/{id}(id=${post.id})}" class="btn btn-comment">
+          💬 (<span th:text="${post.commentCount}">0</span>)
+        </a>
+      </div>
     </div>
+  </div>
 </div>

@@ -1,9 +1,14 @@
 package com.spring.blogsport.controller;
 
 import com.spring.blogsport.model.Comment;
+import com.spring.blogsport.model.Post;
 import com.spring.blogsport.model.User;
 import com.spring.blogsport.service.CommentService;
+import com.spring.blogsport.service.PostService;
 import com.spring.blogsport.service.UserService;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,17 +16,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+
 @Controller
 @RequestMapping("/comments")
 public class CommentController {
 
     private final CommentService commentService;
     private final UserService userService;
+    private final PostService postService;
 
     public CommentController(CommentService commentService,
-                             UserService userService) {
+                             UserService userService,
+                             PostService postService) {
         this.commentService = commentService;
         this.userService = userService;
+        this.postService = postService;
     }
 
     // Submits a new comment to a post
@@ -70,4 +79,13 @@ public class CommentController {
         commentService.deleteComment(id);
         return "redirect:/posts/" + postId;
     }
+@GetMapping("/post/{postId}")
+public String viewPostDetails(@PathVariable Long postId, Model model) {
+    Post post = postService.getPostById(postId);
+    List<Comment> comments = commentService.getCommentsByPostId(postId);
+    model.addAttribute("post", post);
+    model.addAttribute("comments", comments);
+    return "posts/postDetails";
+}
+    
 }

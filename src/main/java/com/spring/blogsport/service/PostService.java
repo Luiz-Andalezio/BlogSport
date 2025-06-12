@@ -5,7 +5,10 @@ import com.spring.blogsport.model.User;
 import com.spring.blogsport.model.Category;
 import com.spring.blogsport.repository.PostRepository;
 import com.spring.blogsport.repository.UserRepository;
+import com.spring.blogsport.repository.CommentRepository;
 import com.spring.blogsport.repository.CategoryRepository;
+import com.spring.blogsport.repository.LikeRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,13 +20,18 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
+    private final CommentRepository commentRepository;
+    @Autowired
+    private LikeRepository likeRepository;
 
     public PostService(PostRepository postRepository,
             UserRepository userRepository,
-            CategoryRepository categoryRepository) {
+            CategoryRepository categoryRepository,
+            CommentRepository commentRepository) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
+        this.commentRepository = commentRepository;
     }
 
     // Creates a post for a user and category
@@ -39,7 +47,13 @@ public class PostService {
 
     // Returns all posts
     public List<Post> getAllPosts() {
-        return postRepository.findAll();
+        List<Post> posts = postRepository.findAll();
+        posts.forEach(post -> {
+            post.setLikeCount(likeRepository.countByPostId(post.getId()));
+            post.setCommentCount(commentRepository.countByPostId(post.getId())); 
+
+        });
+        return posts;
     }
 
     // Returns all posts by user
@@ -53,8 +67,8 @@ public class PostService {
     }
 
     // Returns a single post by ID
-    public Post getPostById(Long id) {
-        return postRepository.findById(id)
+    public Post getPostById(Long postId) {
+        return postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
     }
 

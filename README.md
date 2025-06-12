@@ -65,21 +65,17 @@ This system was developed as part of the *Web Application Development* course an
 ### 🔎 **Additional Functionalities**
 
 6. **Search System**
-
    * Keyword-based search for posts
 
 7. **Reports**
-
    * Admin can generate downloadable PDF reports with post/comment statistics using **iTextPDF**
 
 8. **Security & Access Control**
-
    * Role-based access (admin vs. regular users)
    * Protected routes via **Spring Security**
    * BCrypt password encryption
 
 9. **UX/UI Enhancements**
-
    * Dynamic page updates via **htmx.js**
    * Responsive layout with **Tailwind CSS**
 
@@ -88,13 +84,11 @@ This system was developed as part of the *Web Application Development* course an
 ## 🛠️ Technologies Used
 
 * **Frontend**:
-
   * Thymeleaf for HTML templates
   * Tailwind CSS for responsive design
   * htmx.js for client-server interactions (likes, comments, filters, etc.)
 
 * **Backend**:
-
   * Java 21 with Spring Boot 3.x
   * Maven for build automation
   * JPA/Hibernate for ORM
@@ -104,7 +98,6 @@ This system was developed as part of the *Web Application Development* course an
   * iTextPDF for PDF generation
 
 * **DevOps**:
-
   * Docker for database containerization
   * Custom PostgreSQL Dockerfile with timezone, locale, and health checks
 
@@ -113,17 +106,18 @@ This system was developed as part of the *Web Application Development* course an
 ## 📁 Project Structure
 
 * `src/main/java/` – Organized by MVC pattern:
+  * `config/` - Spring Security settings, JWT auth, BCrypt, access filters
   * `controller/` – Handles HTTP routes and UI interactions
   * `service/` – Business logic
   * `model/` – Entity classes and DTOs
   * `repository/` – Spring Data interfaces for DB access
-  * `security/` – JWT auth, BCrypt, access filters
+  * `utils/` - Test/utility files
 
 * `src/main/resources/`:
   * `application.yml` – Central configuration
-  * `templates/` – Thymeleaf HTML pages
-  * `static/` – Images, Tailwind, scripts
-  * `db/migration/` – Flyway migration scripts
+  * `templates/` – Thymeleaf HTML pages and your fragments
+  * `static/` – Images, css, scripts
+  * `db/migration/` – DB sketches/drafts
 
 * `src/test/java/` – JUnit tests
 
@@ -137,20 +131,27 @@ This system was developed as part of the *Web Application Development* course an
 
 ## 📈 Project Status
 
-* **Current progress**: \~10% completed
+* **Current progress**: \~40% completed
 
 * **Latest**:
-  * Posting tests
-  * Security Spring Auth
+  * Add db test elements
+  * Home page contentening navbar and a topbar with searchbar  
+  * Post details page
+  * Category posts page
+  * Search system
  
 * **Next steps**:
-  1. Classes and tables for admin, posts, comments, likes implemented
+  1. Authentication & profile management active
   2. Admin panel functional
-  3. Authentication & profile management active
+  3. Posts and category admin CRUDs
   4. Enhance validations and security filters
   5. PDF report integration
   6. Final UI polishing and responsive layout testing
   7. Deployment phase
+
+* **Optional extra steps**:
+  1. Follow category and posts system
+  2. Notification system
 
 ---
 
@@ -159,12 +160,11 @@ This system was developed as part of the *Web Application Development* course an
 ### ✅ Prerequisites
 
 Install the following tools:
-
-* Java 21 JDK
-* Maven
-* Docker Engine
-* PgAdmin (optional, DB visualization)
-* IntelliJ IDEA / Eclipse / VS Code
+  * Java 21 JDK
+  * Maven
+  * Docker Engine
+  * PgAdmin (optional, DB visualization)
+  * IntelliJ IDEA / Eclipse / VS Code
 
 ---
 
