@@ -27,32 +27,30 @@ public class LikeService {
     }
 
     // Adds a like
-    public Like addLike(Long postId, Long userId) {
-        Optional<Like> existing = likeRepository.findByPostIdAndUserId(postId, userId);
-        if (existing.isPresent()) {
-            throw new RuntimeException("Already liked");
-        }
-
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new RuntimeException("Post not found"));
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        Like like = new Like();
-        like.setPost(post);
-        like.setUser(user);
-        return likeRepository.save(like);
+   public Like addLike(Long postId, Long userId) {
+    Optional<Like> existing = likeRepository.findByPostIdAndUserId(postId, userId);
+    if (existing.isPresent()) {
+        likeRepository.delete(existing.get());
     }
 
-    // Removes a like
-    public void removeLike(Long postId, Long userId) {
-        Like like = likeRepository.findByPostIdAndUserId(postId, userId)
-                .orElseThrow(() -> new RuntimeException("Like not found"));
-        likeRepository.delete(like);
-    }
+    Post post = postRepository.findById(postId)
+            .orElseThrow(() -> new RuntimeException("Post not found"));
+    User user = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("User not found"));
 
-    // Counts likes
-    public long countLikes(Long postId) {
-        return likeRepository.countByPostId(postId);
-    }
+    Like like = new Like();
+    like.setPost(post);
+    like.setUser(user);
+    return likeRepository.save(like);
+}
+
+public void removeLike(Long postId, Long userId) {
+    Like like = likeRepository.findByPostIdAndUserId(postId, userId)
+            .orElseThrow(() -> new RuntimeException("Like not found"));
+    likeRepository.delete(like);
+}
+
+public long countLikes(Long postId) {
+    return likeRepository.countByPostId(postId);
+}
 }
