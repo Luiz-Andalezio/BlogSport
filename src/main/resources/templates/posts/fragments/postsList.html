@@ -14,11 +14,9 @@
       <p class="mt-2 text-gray-700 line-clamp-3" th:text="${post.content}">Post excerpt...</p>
       <a th:href="@{/posts/{id}(id=${post.id})}" class="mt-4 text-green-600 hover:underline text-sm">Read more</a>
       <div class="post-actions mt-4 flex items-center gap-4">
-        <form th:action="@{/likes/post/{postId}/toggle(postId=${post.id})}" method="post">
-          <button class="btn btn-like">
+          <a th:href="@{/likes/post/{id}/toggle(id=${post.id})}" class="btn btn-like">
             👍(<span th:text="${post.likeCount}">0</span>)
-          </button>
-        </form>
+          </a>
         <a th:href="@{/posts/{id}(id=${post.id})}" class="btn btn-comment" style="padding-left: 30px;">
           💬 (<span th:text="${post.commentCount}">0</span>)
         </a>
@@ -26,3 +24,6 @@
     </div>
   </div>
 </div>
+
+
+
