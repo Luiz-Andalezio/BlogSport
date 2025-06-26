@@ -20,4 +20,3 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     // Returns top3 by name (case insensitive)
     List<Category> findTop3ByNameContainingIgnoreCaseOrderByNameAsc(String name);
 }
-

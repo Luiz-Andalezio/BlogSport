@@ -40,12 +40,12 @@ public class CommentService {
     // Gets comments for a post
     public List<Comment> getCommentsByPostId(Long postId) {
         return commentRepository.findByPostId(postId);
-    }
+    } // util para listar todos os comentarios de um post
 
     // Gets comments by a user
     public List<Comment> getCommentsByUserId(Long userId) {
         return commentRepository.findByUserId(userId);
-    }
+    } // para listar todos os comentarios de um usuario
 
     // Updates a comment
     public Comment updateComment(Long commentId, String newContent) {
@@ -64,5 +64,9 @@ public class CommentService {
     public Comment getCommentById(Long id) {
         return commentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Comment not found"));
-    }
+    } // para acessaar um comentario especifico
+
+    public long countComments(Long postId) {
+        return commentRepository.countByPostId(postId);
+    } // conta comentarios de um post
 }

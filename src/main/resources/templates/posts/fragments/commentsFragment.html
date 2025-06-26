@@ -1,0 +1,44 @@
+<ul th:fragment="commentsFragment">
+  <li
+    th:each="comment : ${comments}"
+    class="mb-4 border rounded-lg shadow-lg p-4 bg-white"
+  >
+    <a
+      th:href="@{/posts/{id}(id=${post.id})}"
+      class="mt-4 text-green-600 hover:underline text-sm"
+      >Read more</a
+    >
+    <div class="flex items-center mb-2">
+      <p
+        class="text-lg font-semibold text-green-700"
+        th:text="${comment.user.name}"
+      >
+        Perfil do usuário
+      </p>
+      <div>
+        <button
+          th:onclick="'editComment(' + ${comment.id} + ')'"
+          class="text-blue-600 hover:underline mr-4"
+        >
+          Edit
+        </button>
+
+        <form
+          th:action="@{/comments/delete/{id}(id=${comment.id})}"
+          method="post"
+          style="display: inline"
+        >
+          <button type="submit" class="text-red-500 hover:underline">
+            Delete
+          </button>
+        </form>
+      </div>
+    </div>
+    <div class="text-gray-700">
+      <p th:utext="${comment.content}">Comment content</p>
+    </div>
+    <div class="text-sm text-gray-500 mt-2">
+      <span th:text="${comment.createdAt}">Date</span>
+    </div>
+  </li>
+</ul>
