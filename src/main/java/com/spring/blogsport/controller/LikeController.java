@@ -17,7 +17,7 @@ public class LikeController {
     private final UserService userService;
 
     public LikeController(LikeService likeService,
-                          UserService userService) {
+            UserService userService) {
         this.likeService = likeService;
         this.userService = userService;
     }
@@ -25,7 +25,7 @@ public class LikeController {
     // Handles like action
     @PostMapping("/post/{postId}")
     public String likePost(@PathVariable Long postId,
-                           @AuthenticationPrincipal UserDetails userDetails) {
+            @AuthenticationPrincipal UserDetails userDetails) {
         User user = userService.findByEmail(userDetails.getUsername()).orElseThrow();
         likeService.addLike(postId, user.getId());
         return "redirect:/posts/" + postId;
@@ -34,9 +34,17 @@ public class LikeController {
     // Handles unlike action
     @PostMapping("/post/{postId}/unlike")
     public String unlikePost(@PathVariable Long postId,
-                             @AuthenticationPrincipal UserDetails userDetails) {
+            @AuthenticationPrincipal UserDetails userDetails) {
         User user = userService.findByEmail(userDetails.getUsername()).orElseThrow();
         likeService.removeLike(postId, user.getId());
+        return "redirect:/posts/" + postId;
+    }
+
+    @PostMapping("/post/{postId}/toggle")
+    public String toggleLike(@PathVariable Long postId,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        User user = userService.findByEmail(userDetails.getUsername()).orElseThrow();
+        likeService.toggleLike(postId, user.getId());
         return "redirect:/posts/" + postId;
     }
 }

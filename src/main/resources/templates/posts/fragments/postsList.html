@@ -5,29 +5,21 @@
       th:each="post : ${posts}"
       class="bg-white rounded-lg shadow p-4 flex flex-col"
     >
-      <a class="text-xl font-semibold text-green-700" th:text="${post.title}"
-        >Post Title</a
-      >
+      <a class="text-xl font-semibold text-green-700" th:text="${post.title}">Post Title</a>
       <div class="text-gray-500 text-sm mt-1">
         <span th:text="${post.category.name}">Category</span> &middot;
         <span th:text="${post.createdAt}">Date</span> &middot;
         <span th:text="${post.user.name}">Author</span>
       </div>
-      <p class="mt-2 text-gray-700 line-clamp-3" th:text="${post.content}">
-        Post excerpt...
-      </p>
-      <a
-        th:href="@{/posts/{id}(id=${post.id})}"
-        class="mt-4 text-green-600 hover:underline text-sm"
-        >Read more</a
-      >
+      <p class="mt-2 text-gray-700 line-clamp-3" th:text="${post.content}">Post excerpt...</p>
+      <a th:href="@{/posts/{id}(id=${post.id})}" class="mt-4 text-green-600 hover:underline text-sm">Read more</a>
       <div class="post-actions mt-4 flex items-center gap-4">
-        <form th:action="@{/posts/{id}/like(id=${post.id})}" method="post">
-          <button type="submit" class="btn btn-like">
+        <form th:action="@{/likes/post/{postId}/toggle(postId=${post.id})}" method="post">
+          <button class="btn btn-like">
             👍(<span th:text="${post.likeCount}">0</span>)
           </button>
         </form>
-        <a th:href="@{/posts/{id}(id=${post.id})}" class="btn btn-comment">
+        <a th:href="@{/posts/{id}(id=${post.id})}" class="btn btn-comment" style="padding-left: 30px;">
           💬 (<span th:text="${post.commentCount}">0</span>)
         </a>
       </div>
