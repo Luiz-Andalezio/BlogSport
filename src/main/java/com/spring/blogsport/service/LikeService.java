@@ -27,7 +27,8 @@ public class LikeService {
     }
 
 
-    public Like toggleLike(Long postId, Long userId) {
+    // função que adiciona ou remove um like
+    public Like addAndRemoveLike(Long postId, Long userId) {
         Optional<Like> existing = likeRepository.findByPostIdAndUserId(postId, userId);
         if (existing.isPresent()) {
             System.out.println("Removendo like para postId: " + postId + ", userId: " + userId);
@@ -40,12 +41,15 @@ public class LikeService {
     }
 
 
+    // remove um like existente
     public void removeLike(Long postId, Long userId) {
         Like like = likeRepository.findByPostIdAndUserId(postId, userId)
                 .orElseThrow(() -> new RuntimeException("Like not found"));
         likeRepository.delete(like);
     }
 
+
+    // Adiciona um novo like
     public Like addLike(Long postId, Long userId) {
         Like like = new Like();
         like.setPost(postRepository.findById(postId)
@@ -55,6 +59,8 @@ public class LikeService {
         return likeRepository.save(like);
     }
 
+
+    // esse é o contador dos likes 
     public long countLikes(Long postId) {
         return likeRepository.countByPostId(postId);
     }
