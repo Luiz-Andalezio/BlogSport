@@ -40,25 +40,19 @@
                 <img th:src="@{${post.imageUrl}}" alt="Post image" class="rounded-lg shadow max-h-96 w-auto mx-auto">
             </div>
             <div class="post-comments mt-8"> <!-- linha de inserir comentarios-->
-                <h2 class="text-xl font-semibold text-green-700 mb-4">Comments</h2>
+                <h2 class="text-xl font-semibold text-green-700 mb-4">Do a comment </h2>
                 <div th:if="${#lists.isEmpty(comments)}" class="text-gray-500">No comments yet.</div>
-                <ul>
-                    <li th:each="comment : ${comments}" class="mb-4 border-b pb-2">
-                        <p><strong th:text="${comment.user.name}">Author</strong>: <span th:text="${comment.content}">Comment content</span></p>
-                    </li>
-                </ul>
                 <form th:action="@{/comments/post/{postId}(postId=${post.id})}" method="post" class="mt-4">
                     <textarea id="summernote-comment-area" name="content" placeholder="Write your comment here..." required class="w-full border rounded p-2"></textarea>
-                    <button type="submit" class="btn btn-primary mt-2 balc">Submit Comment</button>
+                    <button type="submit" class="btn btn-primary mt-2 balc" style="background-color: rgb(224, 245, 228); border: solid 1px rgb(0, 0, 0); border-radius: 5px;">Submit </button>
                 </form>
             </div> <!-- fim da linha de inserir comentarios-->
             <div class="comments-section mt-8">
-                <h2 class="text-xl font-bold mb-4">Comments (<span th:text="${post.commentCount}">0</span>)</h2>
-                <ul>
-                    <li th:each="comment : ${comments}" class="mb-4 border-b pb-2">
-                        <p><strong th:text="${comment.user.name}">Author</strong>: <span th:text="${comment.content}">Comment content</span></p>
-                    </li>
-                </ul>
+                <h2 class="text-xl font-bold mb-4">
+                    Comments (<span th:text="${post.commentCount}">0</span>)
+                </h2>
+                    <div th:insert="posts/fragments/commentsFragment :: commentsFragment"></div> <!--fragmento de comentarios-->
+            </div>
             </div>
                 </ul>
             </div>
