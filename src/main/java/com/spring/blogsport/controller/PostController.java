@@ -125,12 +125,12 @@ public class PostController {
         return "redirect:/posts/" + id;
     }
 
-    // Deletes a post
-    @PostMapping("/{id}/delete")
-    public String deletePost(@PathVariable Long id) {
-        postService.deletePost(id);
-        return "redirect:/posts";
-    }
+    // // Deletes a post
+    // @PostMapping("/{id}/delete")
+    // public String deletePost(@PathVariable Long id) {
+    //     postService.deletePost(id);
+    //     return "redirect:/posts";
+    // }
 
     @PostMapping("/{id}/like")
     public String addLike(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
