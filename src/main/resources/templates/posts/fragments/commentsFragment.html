@@ -1,41 +1,54 @@
 <ul th:fragment="commentsFragment">
   <li
     th:each="comment : ${comments}"
-    class="mb-4 border rounded-lg shadow-lg p-4 bg-white"
+    th:classappend="${editingCommentId == comment.id} ? 'ring-4 ring-green-400 bg-green-50 scale-105 z-10' : ''"
+    class="mb-4 border rounded-lg shadow-lg p-4 bg-white transition-all duration-200"
   >
-    <a
-      th:href="@{/posts/{id}(id=${post.id})}"
-      class="mt-4 text-green-600 hover:underline text-sm"
-      >Read more</a
-    >
-    <div class="flex items-center mb-2">
+    <div class="flex items-center justify-between mb-2">
       <p
         class="text-lg font-semibold text-green-700"
         th:text="${comment.user.name}"
       >
         Perfil do usuário
       </p>
-      <div>
-        <button
-          th:onclick="'editComment(' + ${comment.id} + ')'"
-          class="text-blue-600 hover:underline mr-4"
-        >
-          Edit
-        </button>
 
-        <form
-          th:action="@{/comments/delete/{id}(id=${comment.id})}"
-          method="post"
-          style="display: inline"
+      <!-- Botões de ação no canto direito do comentario -->
+      <div class="flex items-center space-x-2">
+        <!-- Botão de Editar - apenas para o dono do comentário -->
+        <a th:if="${#authentication.principal.username == comment.user.email}"
+          th:href="@{/comments/{id}/edit(id=${comment.id}, postId=${comment.post.id})}"
+          class="px-3 py-1 text-sm text-gray-600 hover:text-blue-600 hover:bg-gray-100 rounded transition-colors"
         >
-          <button type="submit" class="text-red-500 hover:underline">
-            Delete
+          📝 Editar
+        </a>
+        
+        <!-- Botão de Excluir - para o dono do comentário ou admin -->
+        <form th:if="${#authentication.principal.username == comment.user.email || #authorization.expression('hasRole(''ADMIN'')')}"
+          th:action="@{/comments/{id}/delete(id=${comment.id})}"
+          method="post"
+          class="inline-block"
+        >
+          <button 
+            type="submit" 
+            class="px-3 py-1 text-sm text-gray-600 hover:text-red-600 hover:bg-gray-100 rounded transition-colors"
+            onclick="return confirm('Tem certeza que deseja excluir este comentário?')"
+          >
+            🗑️ Excluir
           </button>
         </form>
       </div>
     </div>
     <div class="text-gray-700">
-      <p th:utext="${comment.content}">Comment content</p>
+
+
+      <!---EDITANDO COMENTÁRIO-->
+      <div th:if="${editingCommentId == comment.id}">
+        <div th:replace="posts/fragments/commentsEdit :: commentsEdit(comment=${comment})"></div>
+      </div>
+      <!-- Se não está editando, mostra conteúdo normal -->
+      <div th:unless="${editingCommentId == comment.id}">
+        <p th:utext="${comment.content}">Comment content</p>
+      </div>
     </div>
     <div class="text-sm text-gray-500 mt-2">
       <span th:text="${comment.createdAt}">Date</span>
