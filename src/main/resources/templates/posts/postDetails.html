@@ -133,7 +133,7 @@
     <script th:inline="javascript">
         $(document).ready(function() {
             // Verifica se está no modo de edição
-            var isEditMode = false;
+            var isEditMode = /*[[${editingPostId != null and editingPostId == post.id}]]*/ false;
 
             // Configuração comum da barra de ferramentas
             var toolbarOptions = [
