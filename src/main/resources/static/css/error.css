@@ -1,0 +1,14 @@
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+}
+
+#errorImages {
+    display: block;
+    max-width: 600px;
+    width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
