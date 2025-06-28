@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Error 404</title>
+    <link rel="icon" type="image/x-icon" th:href="@{/images/favicon.png}" />
+    <link rel="stylesheet" href="/css/error.css">
+    <link rel="stylesheet" href="/css/tailwind.css">
+</head>
+<body class="bg-white min-h-screen flex">
+    <!-- Left sidebar navbar -->
+    <div th:replace="home/fragments/navbar :: navbar"></div>
+    <!-- Main content area -->
+    <div class="flex-1 flex flex-col">
+        <!-- Top bar -->
+        <div th:replace="home/fragments/topbar :: topbar"></div>
+        <!-- Breadcrumbs -->
+        <nav class="text-sm px-6 py-4 bg-gray-50 border-b border-gray-200 font-semibold"
+            aria-label="Breadcrumb">
+            <a href="/" class="text-green-700 hover:underline">Home</a>
+            <span class="text-gray-400">&gt;<span>
+            <span class="text-red-700">Error 404</a>
+        </nav>
+        <div th:replace="error/fragments/errorContent :: errorContent('404.png', 'Error 404', 'Page not found. If the error persists, contact the administrator.')"></div>
+    </div>
+</body>
+</html>

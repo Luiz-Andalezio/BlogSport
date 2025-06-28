@@ -1,0 +1,9 @@
+<div th:fragment="errorContent(img, alt, msg)">
+    <main class="flex flex-col align-middle justify-center w-full m-10">
+        <img th:src="@{'/images/errors/' + ${img}}" id="errorImages" class="flex flex-col items-center justify-center mx-auto block mt-5" th:alt="${alt}" />
+        <h3 class="text-center mt-5 mb-5" th:text="${msg}"></h3>
+        <div class="text-center">
+            <a th:href="@{/}" class="text-green-700 hover:underline">Back to the home page.</a>
+        </div>
+    </main>
+</div>
