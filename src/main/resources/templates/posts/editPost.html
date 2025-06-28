@@ -1,0 +1,52 @@
+
+<!DOCTYPE html>
+<html lang="en" 
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${post.title} + ' - BlogSport'">Post Details - BlogSport</title>
+    <link rel="icon" type="image/x-icon" th:href="@{/images/favicon.png}" />
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/tailwind.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-white min-h-screen flex">
+    <div th:replace="home/fragments/navbar :: navbar"></div>
+    <div class="flex-1 flex flex-col">
+        <div th:replace="home/fragments/topbar :: topbar"></div>
+        <nav class="text-sm px-6 py-4 bg-gray-50 border-b border-gray-200 font-semibold"
+            aria-label="Breadcrumb">
+            <a href="/" class="text-green-700 hover:underline">Home</a>
+            <span class="text-gray-400">&gt;</span>
+            <a th:href="@{/categories/{id}(id=${post.category.id})}" class="text-green-700 hover:underline"
+                th:text="${post.category.name}">Category</a>
+            <span class="text-gray-400">&gt;</span>
+            <span class="text-gray-700" th:text="${post.title}">Post Title</span>
+        </nav>
+        <main class="flex-1 bg-white p-8">
+            <div class="max-w-4xl mx-auto">
+                <h1 class="text-3xl font-bold text-green-700 mb-4" th:text="${post.title}">Post Title</h1>
+                <div class="flex justify-between items-center">
+                    <div class="text-gray-500 text-sm mb-6 mt-1">
+                        <span th:text="${post.category.name}">Category</span> &middot; 
+                        <span th:text="${post.createdAt}">Date</span> &middot; 
+                        <span th:text="${post.user.name}">Author</span>
+                        <span th:text="${post.commentCount} + ' comments'">0 comments</span>
+                    </div>
+                    <div sec:authorize="hasRole('ROLE_ADMIN')" class="flex gap-2">
+                        <a th:href="@{/posts/{id}/edit(id=${post.id})}" 
+                           class="inline-flex items-center px-4 py-2 bg-green-50 hover:bg-green-100 text-black border border-black rounded transition-colors">
+                            <span class="mr-2">✏️</span> Edit
+                        </a>
+                    </div>
+                        <div th:insert="posts/fragments/editPostFragments :: editPostFragments(post=${post})"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
