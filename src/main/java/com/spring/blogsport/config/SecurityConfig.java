@@ -16,12 +16,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SecurityConfig {
 
-    private static final String[] AUTH_LIST = {
+    private static final String[] PUBLIC_LIST = {
             "/",
             "/home",
             "/home/**",
             "/posts",
-            "/posts/**",
             "/posts/{id}",
             "/categories",
             "/categories/{id}",
@@ -42,7 +41,8 @@ public class SecurityConfig {
             http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                 .requestMatchers("/login", "/register").permitAll()
-                .requestMatchers(AUTH_LIST).permitAll()
+                .requestMatchers(PUBLIC_LIST).permitAll()
+                .requestMatchers("/posts/new", "/posts/create", "/posts/edit/**", "/posts/delete/**").hasRole("ADMIN")
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated())
             .formLogin(form -> form

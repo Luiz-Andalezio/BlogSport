@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" 
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="UTF-8">
@@ -18,9 +20,11 @@
         <!-- Top bar -->
         <div th:replace="home/fragments/topbar :: topbar"></div>
         <!-- Breadcrumbs -->
-        <nav class="text-sm px-6 py-4 bg-gray-50 border-b border-gray-200 font-semibold mb-4" aria-label="Breadcrumb">
+        <nav class="text-sm px-6 py-4 bg-gray-50 border-b border-gray-200 font-semibold mb-4 flex justify-between items-center" aria-label="Breadcrumb">
             <p class="text-gray-700">Home</p>
+            <a href="/posts/new" sec:authorize="hasRole('ROLE_ADMIN')" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors">Criar Postagem</a>
         </nav>
+
         <main class="p-6">
             <div th:replace="posts/fragments/postsList :: postsList"></div>
         </main>
