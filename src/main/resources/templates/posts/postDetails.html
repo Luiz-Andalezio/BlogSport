@@ -28,9 +28,10 @@
         </nav>
         <main class="flex-1 bg-white p-8">
             <div class="max-w-4xl mx-auto">
-                <!-- Modo de Visualização -->
-                <div th:unless="${editingPostId == post.id}" class="bg-white rounded-lg shadow-md overflow-hidden mb-8">
-                    <div class="p-6">
+                <!-- Seção do Post -->
+                <section class="post-section mb-8">
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                        <div class="p-6">
                         <h1 class="text-3xl font-bold text-green-700 mb-4" th:text="${post.title}">Post Title</h1>
                         <div class="flex justify-between items-center mb-6">
                             <div class="text-gray-500 text-sm">
@@ -51,52 +52,10 @@
                             <img th:src="@{${post.imageUrl}}" alt="Post image" class="rounded-lg shadow max-h-96 w-auto mx-auto">
                         </div>
                     </div>
-                </div>
+                </section>
 
-                <!-- Modo de Edição -->
-                <div th:if="${editingPostId == post.id}" class="bg-white rounded-lg shadow-md overflow-hidden mb-8">
-                    <div class="p-6">
-                        <form th:action="@{/posts/{id}/edit(id=${post.id})}" method="post" class="space-y-6">
-                            <div>
-                                <label for="title" class="block text-sm font-medium text-gray-700">Título</label>
-                                <input type="text" id="title" name="title" th:value="${post.title}" required
-                                       class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-green-500 focus:ring-green-500">
-                            </div>
-
-                            <div>
-                                <label for="categoryId" class="block text-sm font-medium text-gray-700">Categoria</label>
-                                <select id="categoryId" name="categoryId" required
-                                        class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-green-500 focus:ring-green-500">
-                                    <option th:each="category : ${categories}"
-                                            th:value="${category.id}"
-                                            th:text="${category.name}"
-                                            th:selected="${category.id == post.category.id}">
-                                    </option>
-                                </select>
-                            </div>
-
-                            <div>
-                                <label for="content" class="block text-sm font-medium text-gray-700">Conteúdo</label>
-                                <textarea id="summernote-edit-area" name="content" required
-                                          th:text="${post.content}"></textarea>
-                            </div>
-
-                            <div class="flex justify-end gap-3">
-                                <a th:href="@{/posts/{id}(id=${post.id})}"
-                                   class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
-                                    Cancelar
-                                </a>
-                                <button type="submit"
-                                        class="px-4 py-2 text-sm font-medium text-black bg-green-50 border border-black rounded-md hover:bg-green-100">
-                                    Salvar Alterações
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Seções de Comentários (visíveis apenas fora do modo de edição) -->
-                <div th:unless="${editingPostId == post.id}">
+                <!-- Seção dos Comentários -->
+                <section class="comments-section">
                     <!-- New Comment Section -->
                     <div class="bg-white rounded-lg shadow-md p-6 mb-8">
                         <h2 class="text-xl font-semibold text-green-700 mb-4">Add a Comment</h2>
@@ -122,9 +81,9 @@
                         <div th:if="${#lists.isEmpty(comments)}" class="text-gray-500 mb-4">
                             No comments yet. Be the first to comment!
                         </div>
-                        <div th:insert="posts/fragments/commentsFragment :: commentsFragment"></div>
-                    </div>
-                </div>
+                        <div th:insert="posts/fragments/commentsFragment :: commentsFragment(editingCommentId=${editingCommentId})">                    </div>
+                </section>
+            </div>
         </main>
     </div>
     <script src="/js/hidePreview.js"></script>
@@ -132,8 +91,8 @@
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
     <script th:inline="javascript">
         $(document).ready(function() {
-            // Verifica se está no modo de edição
-            var isEditMode = /*[[${editingPostId != null and editingPostId == post.id}]]*/ false;
+            // Verifica se está no modo de edição de comentário
+            var editingCommentId = /*[[${editingCommentId}]]*/ null;
 
             // Configuração comum da barra de ferramentas
             var toolbarOptions = [
@@ -146,24 +105,24 @@
                 ['view', ['fullscreen', 'codeview', 'help']]
             ];
 
-            if (isEditMode) {
-                // Se estiver no modo de edição, inicializa apenas o editor do post
-                $('#summernote-edit-area').summernote({
+            // Inicializa o editor de comentários
+            $('#summernote-comment-area').summernote({
+                tabsize: 2,
+                height: 120,
+                toolbar: toolbarOptions
+            });
+
+            // Se estiver editando um comentário, inicializa o editor de edição
+            if (editingCommentId) {
+                $('#summernote-comment-edit-area').summernote({
                     tabsize: 2,
-                    height: 300,
+                    height: 120,
                     toolbar: toolbarOptions,
                     callbacks: {
                         onInit: function() {
                             $(this).summernote('focus');
                         }
                     }
-                });
-            } else {
-                // Se não estiver no modo de edição, inicializa apenas o editor de comentários
-                $('#summernote-comment-area').summernote({
-                    tabsize: 2,
-                    height: 120,
-                    toolbar: toolbarOptions
                 });
             }
         });
