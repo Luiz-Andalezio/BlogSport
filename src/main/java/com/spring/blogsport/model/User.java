@@ -18,6 +18,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,6 +39,7 @@ public class User {
     private Long id;
 
     @NotBlank(message = "Name is required")
+    @Size(min = 2, message = "Name must have at least 2 characters")
     private String name;
 
     @Email(message = "Invalid email format")
@@ -67,7 +69,7 @@ public class User {
     // One user to many likes
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Like> likes;
-    
+
     public enum Role {
         USER, ADMIN
     }

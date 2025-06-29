@@ -46,9 +46,7 @@ public class UserService {
         User user = findById(id);
         user.setName(updated.getName());
         user.setEmail(updated.getEmail());
-        if (updated.getPassword() != null && !updated.getPassword().isBlank()) {
-            user.setPassword(passwordEncoder.encode(updated.getPassword()));
-        }
+        user.setBirthDate(updated.getBirthDate());
         user.setProfileImage(updated.getProfileImage());
         return userRepository.save(user);
     }
