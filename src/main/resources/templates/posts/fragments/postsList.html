@@ -49,16 +49,15 @@
       <div class="post-actions mt-4 flex items-center gap-4">
         <a
           th:href="@{/likes/post/{id}/toggle(id=${post.id})}"
-          class="btn btn-like"
+          class="flex items-center gap-1 px-3 py-1 text-sm text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors duration-200"
         >
-          👍(<span th:text="${post.likeCount}">0</span>)
+          👍 <span th:text="${post.likeCount}">0</span>
         </a>
         <a
           th:href="@{/posts/{id}(id=${post.id})}"
-          class="btn btn-comment"
-          style="padding-left: 30px"
+          class="flex items-center gap-1 px-3 py-1 text-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors duration-200"
         >
-          💬 (<span th:text="${post.commentCount}">0</span>)
+          💬 <span th:text="${post.commentCount}">0</span>
         </a>
       </div>
     </div>
