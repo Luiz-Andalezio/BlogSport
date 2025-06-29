@@ -65,9 +65,11 @@ public class PostController {
     // Displays form to create a new post
     @GetMapping("/new")
     public String showPostForm(Model model) {
-        List<Category> categories = categoryService.getAllCategories();
+        List<Category> categories = categoryService.getAllCategoriesWithRecentPosts();
+        List<Category> sidebarCategories = categoryService.getAllCategoriesWithRecentPosts();
         model.addAttribute("post", new Post());
         model.addAttribute("categories", categories);
+        model.addAttribute("sidebarCategories", sidebarCategories);
         model.addAttribute("pageTitle", "Criar Nova Postagem - BlogSport");
         return "posts/createPost";
     }
@@ -112,11 +114,9 @@ public class PostController {
         return "posts/postDetails";
     }
 
-    // Displays form to edit an existing post inline
     @GetMapping("/{id}/edit")
     public String editPostForm(@PathVariable Long id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
         Post post = postService.getPostById(id);
-        List<Comment> comments = commentService.getCommentsByPostId(id);
         
         // Verifica se o usuário atual é o autor do post ou um admin
         User currentUser = userService.findByEmail(userDetails.getUsername()).orElseThrow();
@@ -128,11 +128,9 @@ public class PostController {
         List<Category> sidebarCategories = categoryService.getAllCategoriesWithRecentPosts();
         model.addAttribute("sidebarCategories", sidebarCategories);
         model.addAttribute("post", post);
-        model.addAttribute("comments", comments);
         model.addAttribute("categories", categoryService.getAllCategories());
-        model.addAttribute("editingPostId", id);
         model.addAttribute("pageTitle", "Editar: " + post.getTitle() + " - BlogSport");
-        return "posts/postDetails";
+        return "posts/editPost";
     }
 
 
