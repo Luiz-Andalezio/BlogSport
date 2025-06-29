@@ -15,7 +15,7 @@
           >Post Title</a
         >
 
-        <!-- Botão deletar à direita do título -->
+        <!-- Botão deletar  -->
         <div sec:authorize="hasRole('ROLE_ADMIN')" class="ml-2">
           <form
             th:action="@{/posts/{id}/delete(id=${post.id})}"
