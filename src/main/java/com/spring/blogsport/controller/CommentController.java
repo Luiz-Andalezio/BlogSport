@@ -3,13 +3,14 @@ package com.spring.blogsport.controller;
 import com.spring.blogsport.model.Comment;
 import com.spring.blogsport.model.Post;
 import com.spring.blogsport.model.User;
+import com.spring.blogsport.model.Category;
+import com.spring.blogsport.service.CategoryService;
 import com.spring.blogsport.service.CommentService;
 import com.spring.blogsport.service.PostService;
 import com.spring.blogsport.service.UserService;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -24,16 +25,19 @@ public class CommentController {
     private final CommentService commentService;
     private final UserService userService;
     private final PostService postService;
+    private final CategoryService categoryService;
 
     public CommentController(CommentService commentService,
                              UserService userService,
-                             PostService postService) {
+                             PostService postService,
+                             CategoryService categoryService) {
         this.commentService = commentService;
         this.userService = userService;
         this.postService = postService;
+        this.categoryService = categoryService;
     }
 
-    // Submits a new comment to a post
+    // Adicionando um comentário a um post 
     @PostMapping("/post/{postId}")
     public String addComment(@PathVariable Long postId,
                              @RequestParam String content,
@@ -41,7 +45,10 @@ public class CommentController {
                              @AuthenticationPrincipal UserDetails userDetails) {
 
         User user = userService.findByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElse(null);
+        if (user == null) {
+            return "redirect:/login";
+        }
 
         Comment comment = Comment.builder()
                 .content(content)
@@ -56,12 +63,21 @@ public class CommentController {
         return "redirect:/posts/" + postId;
     }
 
-    // Displays edit form
+    // Shows edit form in separate page
     @GetMapping("/{id}/edit")
-    public String editCommentForm(@PathVariable Long id, Model model) {
+    public String editCommentForm(@PathVariable Long id, @RequestParam Long postId, Model model) {
+        Post post = postService.getPostById(postId);
+        List<Comment> comments = commentService.getCommentsByPostId(postId);
+        List<Category> sidebarCategories = categoryService.getAllCategoriesWithRecentPosts();
         Comment comment = commentService.getCommentById(id);
+        
+        model.addAttribute("post", post);
+        model.addAttribute("comments", comments);
+        model.addAttribute("editingCommentId", id);
+        model.addAttribute("sidebarCategories", sidebarCategories);
         model.addAttribute("comment", comment);
-        return "commentForm";
+        
+        return "posts/postDetails";
     }
 
     // Handles edit submission
@@ -79,13 +95,7 @@ public class CommentController {
         commentService.deleteComment(id);
         return "redirect:/posts/" + postId;
     }
-@GetMapping("/post/{postId}")
-public String viewPostDetails(@PathVariable Long postId, Model model) {
-    Post post = postService.getPostById(postId);
-    List<Comment> comments = commentService.getCommentsByPostId(postId);
-    model.addAttribute("post", post);
-    model.addAttribute("comments", comments);
-    return "posts/postDetails";
-}
+
+
     
 }

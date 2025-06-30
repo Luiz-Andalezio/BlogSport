@@ -18,6 +18,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+
 
 @Controller
 @RequestMapping("/posts")
@@ -49,22 +55,27 @@ public class PostController {
     @GetMapping
     public String listPosts(Model model) {
         List<Post> posts = postService.getAllPosts();
+        List<Category> sidebarCategories = categoryService.getAllCategoriesWithRecentPosts();
         model.addAttribute("posts", posts);
         model.addAttribute("pageTitle", "Posts - BlogSport");
-        model.addAttribute("contentFragment", "posts :: content");
-        return "layout";
+        model.addAttribute("sidebarCategories", sidebarCategories);
+        return "home/index";
     }
 
     // Displays form to create a new post
     @GetMapping("/new")
     public String showPostForm(Model model) {
+        List<Category> categories = categoryService.getAllCategoriesWithRecentPosts();
+        List<Category> sidebarCategories = categoryService.getAllCategoriesWithRecentPosts();
         model.addAttribute("post", new Post());
-        model.addAttribute("categories", categoryService.getAllCategories());
-        return "postForm";
+        model.addAttribute("categories", categories);
+        model.addAttribute("sidebarCategories", sidebarCategories);
+        model.addAttribute("pageTitle", "Criar Nova Postagem - BlogSport");
+        return "posts/createPost";
     }
 
     // Handles form submission to create a post
-    @PostMapping
+    @PostMapping("/create")
     public String savePost(@ModelAttribute @Valid Post post,
             BindingResult result,
             @RequestParam("categoryId") Long categoryId,
@@ -72,7 +83,16 @@ public class PostController {
             Model model) {
         if (result.hasErrors()) {
             model.addAttribute("categories", categoryService.getAllCategories());
-            return "postForm";
+            model.addAttribute("pageTitle", "Criar Nova Postagem - BlogSport");
+            return "posts/createPost";
+        }
+
+        // Sanitizar o conteúdo HTML
+        String content = post.getContent();
+        if (content != null) {
+            // Remove todas as tags HTML, deixando apenas o texto
+            content = content.replaceAll("<[^>]*>", "");
+            post.setContent(content);
         }
 
         User user = userService.findByEmail(userDetails.getUsername()).orElseThrow();
@@ -90,20 +110,36 @@ public class PostController {
         List<Category> sidebarCategories = categoryService.getAllCategoriesWithRecentPosts();
         model.addAttribute("sidebarCategories", sidebarCategories);
         model.addAttribute("post", post);
-        model.addAttribute("comments", comments); // Adiciona os comentários ao modelo
+        model.addAttribute("comments", comments);
         return "posts/postDetails";
     }
 
-
-
-    // Displays form to edit an existing post
     @GetMapping("/{id}/edit")
-    public String editPostForm(@PathVariable Long id, Model model) {
+    public String editPostForm(@PathVariable Long id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
         Post post = postService.getPostById(id);
+        
+        // Verifica se o usuário atual é o autor do post ou um admin
+        User currentUser = userService.findByEmail(userDetails.getUsername()).orElseThrow();
+        if (!post.getUser().getId().equals(currentUser.getId()) && 
+            !userDetails.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+            return "redirect:/posts/" + id;
+        }
+
+        List<Category> sidebarCategories = categoryService.getAllCategoriesWithRecentPosts();
+        model.addAttribute("sidebarCategories", sidebarCategories);
         model.addAttribute("post", post);
         model.addAttribute("categories", categoryService.getAllCategories());
-        return "postForm";
+        model.addAttribute("pageTitle", "Editar: " + post.getTitle() + " - BlogSport");
+        return "posts/editPost";
     }
+
+
+    @PostMapping("/{id}/delete")
+    public String postMethodName(@PathVariable Long id) {
+        postService.deletePost(id);
+        return "redirect:/posts";
+    }
+    
 
     // Updates the post
     @PostMapping("/{id}/edit")
@@ -115,7 +151,8 @@ public class PostController {
             Model model) {
         if (result.hasErrors()) {
             model.addAttribute("categories", categoryService.getAllCategories());
-            return "postForm";
+            model.addAttribute("pageTitle", "Editar Postagem - BlogSport");
+            return "posts/createPost";
         }
 
         updatedPost.setUser(userService.findByEmail(userDetails.getUsername()).orElseThrow());
@@ -125,32 +162,12 @@ public class PostController {
         return "redirect:/posts/" + id;
     }
 
-    // Deletes a post
-    @PostMapping("/{id}/delete")
-    public String deletePost(@PathVariable Long id) {
-        postService.deletePost(id);
-        return "redirect:/posts";
-    }
-
     @PostMapping("/{id}/like")
     public String addLike(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
         User user = userService.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
         likeService.addLike(id, user.getId());
 
-        return "redirect:/posts/" + id;
-    }
-
-    @PostMapping("/{id}/comment")
-    public String addCommentCount(@PathVariable Long id, Model model,
-            @AuthenticationPrincipal UserDetails userDetails) {
-        Post post = postService.getPostById(id);
-
-        // User user = userService.findByEmail(userDetails.getUsername())
-        // .orElseThrow(() -> new RuntimeException("User not found"));
-        post.setCommentCount(commentService.countComments(post.getId())); // Atualiza a contagem de comentários
-        List<Comment> comments = commentService.getCommentsByPostId(post.getId()); // Busca os comentários
-        commentService.countComments(id);
         return "redirect:/posts/" + id;
     }
 

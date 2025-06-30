@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" 
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="UTF-8">
@@ -24,61 +26,105 @@
             <span class="text-gray-400">&gt;</span>
             <span class="text-gray-700" th:text="${post.title}">Post Title</span>
         </nav>
-        <main class="p-8 max-w-3xl">
-            <h1 class="text-3xl font-bold text-green-700 mb-4" th:text="${post.title}">Post Title</h1>
-            <div class="text-gray-500 text-sm mb-6 mt-1">
-                <span th:text="${post.category.name}">Category</span> &middot; 
-                <span th:text="${post.createdAt}">Date</span> &middot; 
-                <span th:text="${post.user.name}">Author</span>
-                <span th:text="${post.commentCount} + ' comments'">0 comments</span> <!-- Exibe a contagem de comentários -->
+        <main class="flex-1 bg-white p-8">
+            <div class="max-w-4xl mx-auto">
+                <!-- Seção do Post -->
+                <section class="post-section mb-8">
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                        <div class="p-6">
+                        <h1 class="text-3xl font-bold text-green-700 mb-4" th:text="${post.title}">Post Title</h1>
+                        <div class="flex justify-between items-center mb-6">
+                            <div class="text-gray-500 text-sm">
+                                <span th:text="${post.category.name}">Category</span> &middot; 
+                                <span th:text="${post.createdAt}">Date</span> &middot; 
+                                <span th:text="${post.user.name}">Author</span>
+                                <span th:text="${post.commentCount} + ' comments'">0 comments</span>
+                            </div>
+                            <div sec:authorize="hasRole('ROLE_ADMIN')" class="flex gap-2">
+                                <a th:href="@{/posts/{id}/edit(id=${post.id})}" 
+                                   class="inline-flex items-center px-4 py-2 bg-green-50 hover:bg-green-100 text-black border border-black rounded transition-colors">
+                                    <span class="mr-2">✏️</span> Edit
+                                </a>
+                            </div>
+                        </div>
+                        <div class="prose text-gray-800" th:utext="${post.content}"></div>
+                        <div th:if="${post.imageUrl}" class="mt-4">
+                            <img th:src="@{${post.imageUrl}}" alt="Post image" class="rounded-lg shadow max-h-96 w-auto mx-auto">
+                        </div>
+                    </div>
+                </section>
 
-            </div>
-            <div class="prose max-w-none text-gray-800" th:utext="${post.content}">
-                Post content here...
-            </div>
-            <div th:if="${post.imageUrl}" class="mt-6">
-                <img th:src="@{${post.imageUrl}}" alt="Post image" class="rounded-lg shadow max-h-96 w-auto mx-auto">
-            </div>
-            <div class="post-comments mt-8"> <!-- linha de inserir comentarios-->
-                <h2 class="text-xl font-semibold text-green-700 mb-4">Do a comment </h2>
-                <div th:if="${#lists.isEmpty(comments)}" class="text-gray-500">No comments yet.</div>
-                <form th:action="@{/comments/post/{postId}(postId=${post.id})}" method="post" class="mt-4">
-                    <textarea id="summernote-comment-area" name="content" placeholder="Write your comment here..." required class="w-full border rounded p-2"></textarea>
-                    <button type="submit" class="btn btn-primary mt-2 balc" style="background-color: rgb(224, 245, 228); border: solid 1px rgb(0, 0, 0); border-radius: 5px;">Submit </button>
-                </form>
-            </div> <!-- fim da linha de inserir comentarios-->
-            <div class="comments-section mt-8">
-                <h2 class="text-xl font-bold mb-4">
-                    Comments (<span th:text="${post.commentCount}">0</span>)
-                </h2>
-                    <div th:insert="posts/fragments/commentsFragment :: commentsFragment"></div> <!--fragmento de comentarios-->
-            </div>
-            </div>
-                </ul>
+                <!-- Seção dos Comentários -->
+                <section class="comments-section">
+                    <!-- New Comment Section -->
+                    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                        <h2 class="text-xl font-semibold text-green-700 mb-4">Add a Comment</h2>
+                        <form th:action="@{/comments/post/{postId}(postId=${post.id})}" method="post">
+                            <textarea id="summernote-comment-area" name="content" 
+                                    placeholder="Write your comment here..." 
+                                    required 
+                                    class="w-full border rounded p-2"></textarea>
+                            <div class="flex justify-end mt-4">
+                                <button type="submit" 
+                                        class="px-6 py-2 bg-green-50 hover:bg-green-100 text-black border border-black rounded transition-colors">
+                                    Submit Comment
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Comments List Section -->
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h2 class="text-xl font-bold text-green-700 mb-4">
+                            Comments (<span th:text="${post.commentCount}">0</span>)
+                        </h2>
+                        <div th:if="${#lists.isEmpty(comments)}" class="text-gray-500 mb-4">
+                            No comments yet. Be the first to comment!
+                        </div>
+                        <div th:insert="posts/fragments/commentsFragment :: commentsFragment(editingCommentId=${editingCommentId})">                    </div>
+                </section>
             </div>
         </main>
     </div>
     <script src="/js/hidePreview.js"></script>
-
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
-
-    <script>
+    <script th:inline="javascript">
         $(document).ready(function() {
-            // Inicializa o Summernote no textarea com o ID 'summernote-comment-area'
+            // Verifica se está no modo de edição de comentário
+            var editingCommentId = /*[[${editingCommentId}]]*/ null;
+
+            // Configuração comum da barra de ferramentas
+            var toolbarOptions = [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ];
+
+            // Inicializa o editor de comentários
             $('#summernote-comment-area').summernote({
                 tabsize: 2,
-                height: 120, // Altura do editor
-                toolbar: [ // Barra de ferramentas personalizada (opcional)
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
+                height: 120,
+                toolbar: toolbarOptions
             });
+
+            // Se estiver editando um comentário, inicializa o editor de edição
+            if (editingCommentId) {
+                $('#summernote-comment-edit-area').summernote({
+                    tabsize: 2,
+                    height: 120,
+                    toolbar: toolbarOptions,
+                    callbacks: {
+                        onInit: function() {
+                            $(this).summernote('focus');
+                        }
+                    }
+                });
+            }
         });
     </script>
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
