@@ -78,6 +78,7 @@ public class PostService {
         post.setTitle(updated.getTitle());
         post.setContent(updated.getContent());
         post.setImageUrl(updated.getImageUrl());
+        post.setCategory(updated.getCategory());
         return postRepository.save(post);
     }
 
