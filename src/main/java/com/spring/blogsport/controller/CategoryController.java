@@ -17,12 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.spring.blogsport.model.Category;
 import com.spring.blogsport.model.Post;
-import com.spring.blogsport.service.CategoryService;
-
-import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 @RequestMapping("/categories")
