@@ -7,7 +7,6 @@ import com.spring.blogsport.model.User;
 import com.spring.blogsport.repository.LikeRepository;
 import com.spring.blogsport.service.*;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;

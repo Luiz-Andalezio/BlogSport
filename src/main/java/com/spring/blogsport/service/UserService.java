@@ -2,7 +2,6 @@ package com.spring.blogsport.service;
 
 import com.spring.blogsport.model.User;
 import com.spring.blogsport.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -46,9 +45,7 @@ public class UserService {
         User user = findById(id);
         user.setName(updated.getName());
         user.setEmail(updated.getEmail());
-        if (updated.getPassword() != null && !updated.getPassword().isBlank()) {
-            user.setPassword(passwordEncoder.encode(updated.getPassword()));
-        }
+        user.setBirthDate(updated.getBirthDate());
         user.setProfileImage(updated.getProfileImage());
         return userRepository.save(user);
     }

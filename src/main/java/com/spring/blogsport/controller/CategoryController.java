@@ -1,5 +1,9 @@
 package com.spring.blogsport.controller;
 
+import com.spring.blogsport.model.Category;
+import com.spring.blogsport.service.CategoryService;
+import jakarta.validation.Valid;
+
 import java.util.List;
 
 import org.springframework.security.access.prepost.PreAuthorize;
