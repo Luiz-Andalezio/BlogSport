@@ -3,7 +3,6 @@ package com.spring.blogsport.controller;
 import com.spring.blogsport.model.Category;
 import com.spring.blogsport.model.User;
 import com.spring.blogsport.service.CommentService;
-import com.spring.blogsport.service.LikeService;
 import com.spring.blogsport.service.UserService;
 import com.spring.blogsport.service.CategoryService;
 import com.spring.blogsport.service.PostService;
@@ -14,7 +13,6 @@ import java.util.List;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;

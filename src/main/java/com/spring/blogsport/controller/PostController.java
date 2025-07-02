@@ -7,7 +7,6 @@ import com.spring.blogsport.model.User;
 import com.spring.blogsport.repository.LikeRepository;
 import com.spring.blogsport.service.*;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -149,7 +148,7 @@ public class PostController {
         // User user = userService.findByEmail(userDetails.getUsername())
         // .orElseThrow(() -> new RuntimeException("User not found"));
         post.setCommentCount(commentService.countComments(post.getId())); // Atualiza a contagem de comentários
-        List<Comment> comments = commentService.getCommentsByPostId(post.getId()); // Busca os comentários
+        //List<Comment> comments = commentService.getCommentsByPostId(post.getId()); // Busca os comentários
         commentService.countComments(id);
         return "redirect:/posts/" + id;
     }

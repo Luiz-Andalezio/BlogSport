@@ -2,7 +2,6 @@ package com.spring.blogsport.repository;
 
 import com.spring.blogsport.model.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 

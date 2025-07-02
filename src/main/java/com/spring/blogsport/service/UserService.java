@@ -2,7 +2,6 @@ package com.spring.blogsport.service;
 
 import com.spring.blogsport.model.User;
 import com.spring.blogsport.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

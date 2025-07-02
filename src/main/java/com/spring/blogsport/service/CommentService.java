@@ -6,7 +6,6 @@ import com.spring.blogsport.model.User;
 import com.spring.blogsport.repository.CommentRepository;
 import com.spring.blogsport.repository.PostRepository;
 import com.spring.blogsport.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
