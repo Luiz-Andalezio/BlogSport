@@ -16,24 +16,29 @@
         <!-- Top bar -->
         <div th:replace="home/fragments/topbar :: topbar"></div>
         <!-- Breadcrumbs -->
-        <nav class="text-sm px-6 py-4 bg-gray-50 border-b border-gray-200 font-semibold"
-            aria-label="Breadcrumb">
+        <nav class="text-sm px-6 py-4 bg-gray-50 border-b border-gray-200 font-semibold" aria-label="Breadcrumb">
             <a href="/" class="text-green-700 hover:underline">Home</a>
             <span class="text-gray-400">&gt;<span>
-            <a href="/account" class="text-green-700 hover:underline">My Account</a>
-            <span class="text-gray-400">&gt;<span>
-            <span class="text-gray-700">Edit Account</span>
+                    <a href="/account" class="text-green-700 hover:underline">My Account</a>
+                    <span class="text-gray-400">&gt;<span>
+                            <span class="text-gray-700">Edit Account</span>
         </nav>
         <main class="p-8 max-w-xl mx-auto">
             <h1 class="text-2xl font-bold mb-6">Edit Account</h1>
             <div th:replace="user/fragments/accountEditForm :: accountEditForm"></div>
         </main>
     </div>
+
+    <script src="/js/modal.js"></script>
+    <script src="/js/hidePreview.js"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+
 </body>
 
 <!-- Right acc management/admin management sidebar navbar -->
 <div th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
     <div th:replace="admin/fragments/adminSidebar :: adminSidebar"></div>
 </div>
+
 
 </html>
