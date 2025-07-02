@@ -65,7 +65,11 @@ public class CommentService {
                 .orElseThrow(() -> new RuntimeException("Comment not found"));
     } // para acessaar um comentario especifico
 
+
+    // contador de comentarios de um post
     public long countComments(Long postId) {
         return commentRepository.countByPostId(postId);
-    } // conta comentarios de um post
+    }
+
+
 }

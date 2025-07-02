@@ -15,12 +15,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SecurityConfig {
 
-    private static final String[] AUTH_LIST = {
+    private static final String[] PUBLIC_LIST = {
             "/",
             "/home",
             "/home/**",
             "/posts",
-            "/posts/**",
             "/posts/{id}",
             "/categories",
             "/categories/{id}",
@@ -42,8 +41,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/error", "/error/**").permitAll() // permite telas de erro
-                        .requestMatchers("/", "/home", "/home/**").permitAll() // permite home
+                        .requestMatchers("/error", "/error/**").permitAll() 
+                        .requestMatchers("/", "/home", "/home/**").permitAll()
                         .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                         .requestMatchers("/login", "/register").permitAll()
                         .requestMatchers(AUTH_LIST).permitAll()
