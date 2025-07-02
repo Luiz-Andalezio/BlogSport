@@ -1,5 +1,5 @@
 <div th:fragment="accountEditForm">
-    <form th:action="@{/account/edit}" method="post" enctype="multipart/form-data" class="space-y-4">
+    <form id="editAccountForm" th:action="@{/account/edit}" method="post" enctype="multipart/form-data" class="space-y-4">
         <div th:if="${error}" class="bg-red-100 text-red-700 px-4 py-2 rounded">
             <span th:text="${error}"></span>
         </div>
@@ -8,7 +8,7 @@
             <input type="text" name="name" th:value="${user.name}" required class="border rounded px-3 py-2 w-full">
         </div>
         <div>
-            <label>Email:</label>
+            <label>Email: <span class="text-red-600" style="font-size: 14px;">Changing your email will require you to log in again.</span></label>
             <input type="email" name="email" th:value="${user.email}" required class="border rounded px-3 py-2 w-full">
         </div>
         <div>
