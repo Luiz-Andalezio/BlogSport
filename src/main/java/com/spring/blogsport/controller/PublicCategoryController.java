@@ -6,10 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.spring.blogsport.model.Category;
-import com.spring.blogsport.model.Comment;
 import com.spring.blogsport.model.Post;
 import com.spring.blogsport.service.CommentService;
 import com.spring.blogsport.service.CategoryService;
@@ -19,12 +17,10 @@ public class PublicCategoryController {
 
     private final CategoryService categoryService;
     private final PostService postService;
-    private final CommentService commentService;
 
     public PublicCategoryController(CategoryService categoryService, PostService postService, CommentService commentService) {
         this.categoryService = categoryService;
         this.postService = postService;
-        this.commentService = commentService;
     }
 
     // htmx endpoint for sidebar categories
