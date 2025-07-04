@@ -1,33 +1,18 @@
-<div
-  th:fragment="postsList"
-  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
->
+<div th:fragment="postsList" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
   <h1 class="text-3xl font-bold mb-6">Latest Posts</h1>
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <div
-      th:each="post : ${posts}"
-      class="bg-white rounded-lg shadow p-4 flex flex-col relative"
-    >
+    <div th:each="post : ${posts}" class="bg-white rounded-lg shadow p-4 flex flex-col relative">
       <!-- Header com título e botão deletar -->
       <div class="flex items-start justify-between mb-1">
         <!-- Título -->
-        <a class="text-xl font-semibold text-green-700 flex-1" th:text="${post.title}"
-          >Post Title</a
-        >
+        <a class="text-xl font-semibold text-green-700 flex-1" th:text="${post.title}">Post Title</a>
 
         <!-- Botão deletar  -->
         <div sec:authorize="hasRole('ROLE_ADMIN')" class="ml-2">
-          <form
-            th:action="@{/posts/{id}/delete(id=${post.id})}"
-            method="post"
-            class="inline-block"
-          >
-            <button
-              type="submit"
+          <form th:action="@{/posts/{id}/delete(id=${post.id})}" method="post" class="inline-block">
+            <button type="submit"
               class="px-2 py-1 text-red-600 hover:text-white hover:bg-red-600 transition-colors text-xs border border-red-200 rounded"
-              onclick="return confirm('Are you sure you want to delete this post?')"
-              title="Delete post"
-            >
+              onclick="return confirm('Are you sure you want to delete this post?')" title="Delete post">
               🗑️ Delete
             </button>
           </form>
@@ -41,22 +26,14 @@
       <p class="mt-2 text-gray-700 line-clamp-3" th:text="${post.content}">
         Post excerpt...
       </p>
-      <a
-        th:href="@{/posts/{id}(id=${post.id})}"
-        class="mt-4 text-green-600 hover:underline text-sm"
-        >Read more</a
-      >
+      <a th:href="@{/posts/{id}(id=${post.id})}" class="mt-4 text-green-600 hover:underline text-sm">Read more</a>
       <div class="post-actions mt-4 flex items-center gap-4">
-        <a
-          th:href="@{/likes/post/{id}/toggle(id=${post.id})}"
-          class="flex items-center gap-1 px-3 py-1 text-sm text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors duration-200"
-        >
+        <a th:href="@{/likes/post/{id}/toggle(id=${post.id})}"
+          class="flex items-center gap-1 px-3 py-1 text-sm text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors duration-200">
           👍 <span th:text="${post.likeCount}">0</span>
         </a>
-        <a
-          th:href="@{/posts/{id}(id=${post.id})}"
-          class="flex items-center gap-1 px-3 py-1 text-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors duration-200"
-        >
+        <a th:href="@{/posts/{id}(id=${post.id})}"
+          class="flex items-center gap-1 px-3 py-1 text-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors duration-200">
           💬 <span th:text="${post.commentCount}">0</span>
         </a>
       </div>

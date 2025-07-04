@@ -4,32 +4,32 @@
     th:classappend="${editingCommentId == comment.id} ? 'ring-4 ring-green-400 bg-green-50 scale-105 z-10' : ''"
     class="mb-4 border rounded-lg shadow-lg p-4 bg-white transition-all duration-200 relative"
   >
-    <!-- Container principal do comentário -->
+    <!-- Main comment container -->
     <div class="relative">
-      <!-- Header do comentário com nome do usuário e botões -->
+      <!-- Comment header with user name and action buttons -->
       <div class="flex items-start justify-between mb-3">
-        <!-- Nome do usuário -->
+        <!-- User name -->
         <p
           class="text-lg font-semibold text-green-700 flex-1"
           th:text="${comment.user.name}"
         ></p>
 
-        <!-- Botões de ação ao lado do nome (apenas quando não está editando) -->
+        <!-- Action buttons next to the name (only when not editing) -->
         <div
           th:unless="${editingCommentId == comment.id}"
           class="flex items-center gap-2 ml-2"
         >
-          <!-- Botão de Editar - apenas para o dono do comentário -->
+          <!-- Edit button - only for the comment owner -->
           <a
             th:if="${#authentication.principal.username == comment.user.email}"
             th:href="@{/comments/{id}/edit(id=${comment.id}, postId=${comment.post.id})}"
             class="px-2 py-1 text-blue-600 hover:text-white hover:bg-blue-600 transition-colors text-xs border border-blue-200 rounded"
-            title="Editar comentário"
+            title="Edit comment"
           >
-            📝 Editar
+            📝 Edit
           </a>
 
-          <!-- Botão de Excluir - para o dono do comentário ou admin -->
+          <!-- Delete button - for the comment owner or admin -->
           <form
             th:if="${#authentication.principal.username == comment.user.email || #authorization.expression('hasRole(''ADMIN'')')}"
             th:action="@{/comments/{id}/delete(id=${comment.id})}"
@@ -39,30 +39,30 @@
             <button
               type="submit"
               class="px-2 py-1 text-red-600 hover:text-white hover:bg-red-600 transition-colors text-xs border border-red-200 rounded"
-              onclick="return confirm('Tem certeza que deseja excluir este comentário?')"
-              title="Excluir comentário"
+              onclick="return confirm('Are you sure you want to delete this comment?')"
+              title="Delete comment"
             >
-              🗑️ Excluir
+              🗑️ Delete
             </button>
           </form>
         </div>
       </div>
 
-      <!-- Conteúdo do comentário -->
+      <!-- Comment content -->
       <div class="text-gray-700">
         <p
           class="text-gray-500 text-sm mt-1"
           th:text="${comment.createdAt}"
         ></p>
 
-        <!---EDITANDO COMENTÁRIO-->
+        <!---EDITING COMMENT-->
         <div th:if="${editingCommentId == comment.id}">
           <div
             th:replace="posts/fragments/commentsEdit :: commentsEdit(comment=${comment})"
           ></div>
         </div>
 
-        <!-- Se não está editando, mostra conteúdo normal -->
+        <!-- If not editing, show normal content -->
         <div th:unless="${editingCommentId == comment.id}">
           <p th:utext="${comment.content}">Comment content</p>
         </div>

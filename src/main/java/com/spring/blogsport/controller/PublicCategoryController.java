@@ -9,16 +9,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.spring.blogsport.model.Category;
 import com.spring.blogsport.model.Post;
+import com.spring.blogsport.service.CommentService;
 import com.spring.blogsport.service.CategoryService;
 import com.spring.blogsport.service.PostService;
-
 @Controller
 public class PublicCategoryController {
 
     private final CategoryService categoryService;
     private final PostService postService;
 
-    public PublicCategoryController(CategoryService categoryService, PostService postService) {
+    public PublicCategoryController(CategoryService categoryService, PostService postService, CommentService commentService) {
         this.categoryService = categoryService;
         this.postService = postService;
     }
@@ -40,8 +40,6 @@ public class PublicCategoryController {
     public String categoryPosts(@PathVariable Long id, Model model) {
         Category category = categoryService.getCategoryById(id);
         List<Post> posts = postService.getPostsByCategoryId(id);
-        List<Category> sidebarCategories = categoryService.getAllCategoriesWithRecentPosts();
-        model.addAttribute("sidebarCategories", sidebarCategories);
         model.addAttribute("category", category);
         model.addAttribute("posts", posts);
         sidebarCategories(model);
