@@ -59,9 +59,4 @@
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
 </body>
 
-<!-- Right acc management/admin management sidebar navbar -->
-<div th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
-    <div th:replace="admin/fragments/adminSidebar :: adminSidebar"></div>
-</div>
-
 </html>

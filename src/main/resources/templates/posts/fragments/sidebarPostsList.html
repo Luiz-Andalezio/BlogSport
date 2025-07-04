@@ -1,14 +1,13 @@
 <div th:fragment="sidebarPostsList">
     <ul>
         <li th:each="post : ${posts}" class="mb-1">
-            <a th:href="@{/posts/{id}(id=${post.id})}" class="text-green-100 hover:underline" th:text="${post.title}">Post Title</a>
+            <a th:href="@{/posts/{id}(id=${post.id})}" class="text-green-100 hover:underline"
+                th:text="${post.title}">Post Title</a>
         </li>
     </ul>
     <div th:if="${hasMore}">
-        <button 
-            class="mt-2 text-xs text-green-200 hover:underline"
-            hx-get="@{/categories/{id}/posts/sidebar(id=${categoryId}, page=${nextPage})}"
-            hx-target="closest div"
+        <button class="mt-2 text-xs text-green-200 hover:underline"
+            hx-get="@{/categories/{id}/posts/sidebar(id=${categoryId}, page=${nextPage})}" hx-target="closest div"
             hx-swap="afterend">
             See more
         </button>
