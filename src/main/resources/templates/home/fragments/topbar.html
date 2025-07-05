@@ -23,7 +23,7 @@
             <a href="/account"
                 class="px-3 py-2 rounded bg-green-600 text-white hover:bg-green-700 transition">Account</a>
             <form th:action="@{/logout}" method="post" class="inline">
-                <button type="submit"
+                <button type="button" id="logoutBtn"
                     class="px-3 py-2 rounded text-white transition bg-gray-500 hover:bg-gray-700">Logout</button>
             </form>
         </div>
