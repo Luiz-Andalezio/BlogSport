@@ -21,6 +21,7 @@ public class SecurityConfig {
             "/home/**",
             "/posts",
             "/posts/{id}",
+            "/posts/**",
             "/categories",
             "/categories/{id}",
             "/categories/**",
