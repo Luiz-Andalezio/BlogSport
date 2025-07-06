@@ -21,14 +21,14 @@
         <nav class="text-sm px-6 py-4 bg-gray-50 border-b border-gray-200 font-semibold mb-4 flex justify-between items-center gap-2"
             aria-label="Breadcrumb">
             <p class="text-gray-700">Home</p>
+            <!-- CRUDs -->
             <div class="flex space-x-4">
                 <a href="/categories/categoriesCrud" sec:authorize="hasRole('ROLE_ADMIN')"
-                    class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors">Create
-                    Category</a>
-
+                    class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">Create Category</a>
                 <a href="/posts/new" sec:authorize="hasRole('ROLE_ADMIN')"
-                    class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors">Create
-                    Post</a>
+                    class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">Create Post</a>
+                <a href="/admin/users" sec:authorize="hasRole('ROLE_ADMIN')"
+                    class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purble-700 transition-colors">Users CRUD</a>
             </div>
         </nav>
 
@@ -36,13 +36,11 @@
             <div th:replace="posts/fragments/postsList :: postsList"></div>
         </main>
     </div>
+
+    <script src="/js/modal.js"></script>
     <script src="/js/hidePreview.js"></script>
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-</body>
 
-<!-- Right acc management/admin management sidebar navbar -->
-<div th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
-    <div th:replace="admin/fragments/adminSidebar :: adminSidebar"></div>
-</div>
+</body>
 
 </html>
