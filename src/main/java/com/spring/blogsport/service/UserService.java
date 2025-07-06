@@ -20,6 +20,26 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    public List<User> findByRole(String role) {
+        return userRepository.findByRole(User.Role.valueOf(role));
+    }
+
+    public void createUserWithRole(User user, String role) {
+        user.setRole(User.Role.valueOf(role));
+        userRepository.save(user);
+    }
+
+    // Registers a new user with role
+    public User updateUser(Long id, User updated, String role) {
+        User user = findById(id);
+        user.setName(updated.getName());
+        user.setEmail(updated.getEmail());
+        user.setBirthDate(updated.getBirthDate());
+        user.setRole(User.Role.valueOf(role));
+        user.setProfileImage(updated.getProfileImage());
+        return userRepository.save(user);
+    }
+
     // Registers a new user with encrypted password
     public User registerUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -27,6 +47,13 @@ public class UserService {
             user.setRole(User.Role.USER);
         }
         return userRepository.save(user);
+    }
+
+    // Changes the password of a user
+    public void changePassword(Long id, String newPassword) {
+        User user = findById(id);
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
     }
 
     // Finds a user by email
