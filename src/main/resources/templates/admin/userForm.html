@@ -42,8 +42,9 @@
                 </div>
                 <div>
                     <label class="block font-semibold mb-1">Birth Date:</label>
-                    <input type="date" th:field="*{birthDate}" max="9999-12-31"
-                        class="border rounded px-3 py-2 w-full" />
+                    <input type="date" th:name="birthDate" th:id="birthDate"
+                        th:value="${user.birthDate != null} ? ${#temporals.format(user.birthDate, 'yyyy-MM-dd')} : ''"
+                        max="9999-12-31" class="border rounded px-3 py-2 w-full" />
                     <div th:if="${#fields.hasErrors('birthDate')}" class="text-red-600 text-sm mt-1"
                         th:errors="*{birthDate}"></div>
                 </div>
@@ -86,7 +87,7 @@
     <script src="/js/modal.js"></script>
     <script src="/js/hidePreview.js"></script>
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-    
+
 </body>
 
 </html>
