@@ -44,7 +44,7 @@
                 <div class="text-gray-500 text-sm mt-1">
                     <span th:text="${post.category.name}">Category</span>
                     <span class="mx-1 text-gray-400">&middot;</span>
-                    <span th:text="${post.createdAt}">Date</span>
+                    <span th:text="${#temporals.format(post.createdAt, 'MM/dd/yyyy')}">Date</span>
                     <span class="mx-1 text-gray-400">&middot;</span>
                     <span th:text="${post.user.name}">Author</span>
                 </div>

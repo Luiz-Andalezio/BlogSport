@@ -36,6 +36,10 @@ public class PostService {
 
     // Creates a post for a user and category
     public Post createPost(Post post, Long userId, Long categoryId) {
+        if (post.getTitle() == null || post.getTitle().isBlank())
+            throw new IllegalArgumentException("Title is required");
+        if (post.getContent() == null || post.getContent().isBlank())
+            throw new IllegalArgumentException("Content is required");
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         Category category = categoryRepository.findById(categoryId)
@@ -75,6 +79,10 @@ public class PostService {
     // Updates a post
     public Post updatePost(Long id, Post updated) {
         Post post = getPostById(id);
+        if (updated.getTitle() == null || updated.getTitle().isBlank())
+            throw new IllegalArgumentException("Title is required");
+        if (updated.getContent() == null || updated.getContent().isBlank())
+            throw new IllegalArgumentException("Content is required");
         post.setTitle(updated.getTitle());
         post.setContent(updated.getContent());
         post.setImageUrl(updated.getImageUrl());
@@ -84,6 +92,8 @@ public class PostService {
 
     // Deletes a post
     public void deletePost(Long id) {
+        if (!postRepository.existsById(id))
+            throw new IllegalArgumentException("Post not found");
         postRepository.deleteById(id);
     }
 

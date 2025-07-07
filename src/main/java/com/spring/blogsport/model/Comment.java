@@ -30,11 +30,13 @@ public class Comment {
     // Many comments to one user
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @jakarta.validation.constraints.NotNull(message = "User is required")
     private User user;
 
     // Many comments to one post
     @ManyToOne
     @JoinColumn(name = "post_id")
+    @jakarta.validation.constraints.NotNull(message = "Post is required")
     private Post post;
 
     // Optional: threaded replies (self-referencing comment replies)
