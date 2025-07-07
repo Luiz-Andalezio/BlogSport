@@ -20,7 +20,7 @@
       </div>
       <div class="text-gray-500 text-sm mt-1">
         <span th:text="${post.category.name}">Category</span> &middot;
-        <span th:text="${post.createdAt}">Date</span> &middot;
+        <span th:text="${#temporals.format(post.createdAt, 'MM/dd/yyyy')}">Date</span> &middot;
         <span th:text="${post.user.name}">Author</span>
       </div>
       <p class="mt-2 text-gray-700 line-clamp-3" th:text="${post.content}">

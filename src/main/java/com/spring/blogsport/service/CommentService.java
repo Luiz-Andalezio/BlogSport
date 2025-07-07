@@ -27,6 +27,8 @@ public class CommentService {
 
     // Adds a comment to a post
     public Comment addComment(Long postId, Long userId, Comment comment) {
+        if (comment.getContent() == null || comment.getContent().isBlank())
+            throw new IllegalArgumentException("Comment content is required");
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
         User user = userRepository.findById(userId)
@@ -48,6 +50,8 @@ public class CommentService {
 
     // Updates a comment
     public Comment updateComment(Long commentId, String newContent) {
+        if (newContent == null || newContent.isBlank())
+            throw new IllegalArgumentException("Comment content is required");
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new RuntimeException("Comment not found"));
         comment.setContent(newContent);
@@ -56,6 +60,8 @@ public class CommentService {
 
     // Deletes a comment
     public void deleteComment(Long id) {
+        if (!commentRepository.existsById(id))
+            throw new IllegalArgumentException("Comment not found");
         commentRepository.deleteById(id);
     }
 

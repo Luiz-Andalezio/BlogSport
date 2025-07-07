@@ -66,20 +66,23 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Like> likes;
 
+    // One post to many tags
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
     }
 
+    // Update timestamp before saving or updating the post
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
 
+    // Transient fields for additional data not stored in the database
     @Transient
     private long likeCount;
 
-        @Transient
+    @Transient
     private long commentCount;
 
 }

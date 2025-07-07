@@ -48,6 +48,8 @@ public class LikeService {
 
     // Adiciona um novo like
     public Like addLike(Long postId, Long userId) {
+        if (likeRepository.findByPostIdAndUserId(postId, userId).isPresent())
+            throw new IllegalArgumentException("User already liked this post");
         Like like = new Like();
         like.setPost(postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found")));
@@ -55,7 +57,6 @@ public class LikeService {
                 .orElseThrow(() -> new RuntimeException("User not found")));
         return likeRepository.save(like);
     }
-
 
     // esse é o contador dos likes 
     public long countLikes(Long postId) {

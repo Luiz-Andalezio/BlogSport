@@ -49,6 +49,7 @@ public class User {
     private LocalDate birthDate;
 
     @NotBlank(message = "Password is required")
+    @Size(min = 6, max = 100, message = "Password must be between 6 and 100 characters")
     private String password;
 
     private String profileImage; // image file path or URL

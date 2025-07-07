@@ -21,6 +21,10 @@ public class CategoryService {
 
     // Creates a category
     public Category createCategory(Category category) {
+        if (category.getName() == null || category.getName().isBlank())
+            throw new IllegalArgumentException("Category name is required");
+        if (categoryRepository.findAll().stream().anyMatch(c -> c.getName().equalsIgnoreCase(category.getName())))
+            throw new IllegalArgumentException("Category name already exists");
         return categoryRepository.save(category);
     }
 
@@ -38,12 +42,19 @@ public class CategoryService {
     // Updates a category
     public Category updateCategory(Long id, Category updated) {
         Category category = getCategoryById(id);
+        if (updated.getName() == null || updated.getName().isBlank())
+            throw new IllegalArgumentException("Category name is required");
+        if (!category.getName().equalsIgnoreCase(updated.getName()) &&
+            categoryRepository.findAll().stream().anyMatch(c -> c.getName().equalsIgnoreCase(updated.getName())))
+            throw new IllegalArgumentException("Category name already exists");
         category.setName(updated.getName());
         return categoryRepository.save(category);
     }
 
     // Deletes a category
     public void deleteCategory(Long id) {
+        if (!categoryRepository.existsById(id))
+            throw new IllegalArgumentException("Category not found");
         categoryRepository.deleteById(id);
     }
 

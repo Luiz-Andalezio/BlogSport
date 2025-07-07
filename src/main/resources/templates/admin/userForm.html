@@ -26,33 +26,47 @@
         <main class="p-8 max-w-xl mx-auto w-full">
             <h1 class="text-2xl font-bold mb-6" th:text="${user.id != null ? 'Edit User' : 'Create User'}"></h1>
             <form th:action="@{${user.id != null} ? '/admin/users/edit/' + ${user.id} : '/admin/users/create'}"
-                method="post" class="space-y-4">
+                th:object="${user}" method="post" class="space-y-4">
                 <div>
                     <label class="block font-semibold mb-1">Name:</label>
-                    <input type="text" name="name" th:value="${user.name}" required
-                        class="border rounded px-3 py-2 w-full">
+                    <input type="text" th:field="*{name}" required minlength="2"
+                        class="border rounded px-3 py-2 w-full" />
+                    <div th:if="${#fields.hasErrors('name')}" class="text-red-600 text-sm mt-1" th:errors="*{name}">
+                    </div>
                 </div>
                 <div>
                     <label class="block font-semibold mb-1">Email:</label>
-                    <input type="email" name="email" th:value="${user.email}" required
-                        class="border rounded px-3 py-2 w-full">
+                    <input type="email" th:field="*{email}" required class="border rounded px-3 py-2 w-full" />
+                    <div th:if="${#fields.hasErrors('email')}" class="text-red-600 text-sm mt-1" th:errors="*{email}">
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-semibold mb-1">Birth Date:</label>
+                    <input type="date" th:name="birthDate" th:id="birthDate"
+                        th:value="${user.birthDate != null} ? ${#temporals.format(user.birthDate, 'yyyy-MM-dd')} : ''"
+                        max="9999-12-31" class="border rounded px-3 py-2 w-full" />
+                    <div th:if="${#fields.hasErrors('birthDate')}" class="text-red-600 text-sm mt-1"
+                        th:errors="*{birthDate}"></div>
                 </div>
                 <div th:if="${user.id == null}">
                     <label class="block font-semibold mb-1">Password:</label>
-                    <input type="password" name="password" required class="border rounded px-3 py-2 w-full">
+                    <input type="password" th:field="*{password}" required minlength="6" maxlength="100"
+                        class="border rounded px-3 py-2 w-full" />
+                    <div th:if="${#fields.hasErrors('password')}" class="text-red-600 text-sm mt-1"
+                        th:errors="*{password}"></div>
                 </div>
                 <div>
                     <label class="block font-semibold mb-1">Role:</label>
-                    <select name="role" class="border rounded px-3 py-2 w-full" required>
-                        <option th:selected="${user.role == null || user.role.name() == 'USER'}" value="USER">User
+                    <select th:field="*{role}" class="border rounded px-3 py-2 w-full" required>
+                        <option th:value="USER" th:selected="${user.role == null || user.role.name() == 'USER'}">User
                         </option>
-                        <option th:selected="${user.role != null && user.role.name() == 'ADMIN'}" value="ADMIN">
+                        <option th:value="ADMIN" th:selected="${user.role != null && user.role.name() == 'ADMIN'}">
                             Administrator</option>
                     </select>
+                    <div th:if="${#fields.hasErrors('role')}" class="text-red-600 text-sm mt-1" th:errors="*{role}">
+                    </div>
                 </div>
-
                 <div class="flex gap-4">
-
                     <a th:if="${user.id != null}" th:href="@{'/admin/users/change-password/' + ${user.id}}"
                         class="text-green-700 hover:underline">
                         Edit this user password
@@ -65,9 +79,15 @@
                     </button>
                     <a href="/admin/users" class="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-600">Cancel</a>
                 </div>
+                <div th:if="${errorMessage != null}" class="text-red-600 text-sm mt-2" th:text="${errorMessage}"></div>
             </form>
         </main>
     </div>
+
+    <script src="/js/modal.js"></script>
+    <script src="/js/hidePreview.js"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+
 </body>
 
 </html>
