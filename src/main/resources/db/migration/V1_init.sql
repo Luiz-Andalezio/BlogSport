@@ -55,6 +55,16 @@ CREATE INDEX idx_comments_parent_id ON comments(parent_id);
 CREATE INDEX idx_likes_user_id ON likes(user_id);
 CREATE INDEX idx_likes_post_id ON likes(post_id);
 
+CREATE TABLE comment_likes (
+    id SERIAL PRIMARY KEY,
+    comment_id INTEGER NOT NULL,  
+    user_id INTEGER NOT NULL,     
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_comment_likes_comment FOREIGN KEY (comment_id) REFERENCES comments(id) ON DELETE CASCADE,
+    CONSTRAINT fk_comment_likes_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    CONSTRAINT uk_comment_likes_user_comment UNIQUE (comment_id, user_id)
+);
+
 -- Insert example
 INSERT INTO posts (title, content, created_at, user_id, category_id)
 VALUES (
