@@ -79,7 +79,7 @@
                                 No comments yet. Be the first to comment!
                             </div>
                             <div
-                                th:insert="posts/fragments/commentsFragment :: commentsFragment(editingCommentId=${editingCommentId})">
+                                th:replace="~{posts/fragments/commentsFragment :: commentsFragment(editingCommentId=${editingCommentId})}">
                             </div>
                         </div>
                     </div>
@@ -117,7 +117,8 @@
 
             // Se estiver editando um comentário, inicializa o editor de edição
             if (editingCommentId) {
-                $('#summernote-comment-edit-area').summernote({
+                // Inicializar Summernote para edição de comentário principal
+                $('#summernote-edit-' + editingCommentId).summernote({
                     tabsize: 2,
                     height: 120,
                     toolbar: toolbarOptions,
@@ -127,9 +128,114 @@
                         }
                     }
                 });
+                
+                // Inicializar Summernote para edição de reply (se existir)
+                $('#summernote-edit-reply-' + editingCommentId).summernote({
+                    tabsize: 2,
+                    height: 100,
+                    toolbar: [
+                        ['font', ['bold', 'italic', 'underline']],
+                        ['para', ['ul', 'ol']],
+                        ['insert', ['link']]
+                    ],
+                    callbacks: {
+                        onInit: function () {
+                            $(this).summernote('focus');
+                        }
+                    }
+                });
             }
         });
     </script>
+    
+    <!-- JavaScript para Comments e Likes -->
+    <script>
+    function toggleReplyForm(commentId) {
+        console.log('Toggling reply form for comment:', commentId);
+        const form = document.getElementById('reply-form-' + commentId);
+        console.log('Found form:', form);
+        
+        if (form) {
+            const isHidden = form.classList.contains('hidden');
+            form.classList.toggle('hidden');
+            console.log('Form is now:', isHidden ? 'visible' : 'hidden');
+            
+            if (isHidden) {
+                // Form está sendo mostrado
+                const replyTextarea = form.querySelector('#summernote-reply-' + commentId);
+                console.log('Found textarea:', replyTextarea);
+                
+                if (replyTextarea && !$(replyTextarea).hasClass('note-editor')) {
+                    console.log('Initializing Summernote for reply form');
+                    $(replyTextarea).summernote({
+                        tabsize: 2,
+                        height: 80, // Menor para replies
+                        placeholder: 'Digite sua resposta aqui...',
+                        toolbar: [
+                            ['font', ['bold', 'italic', 'underline']],
+                            ['para', ['ul', 'ol']],
+                            ['insert', ['link']]
+                        ],
+                        callbacks: {
+                            onInit: function () {
+                                console.log('Summernote initialized and focused');
+                                $(replyTextarea).summernote('focus');
+                            }
+                        }
+                    });
+                } else if (replyTextarea) {
+                    $(replyTextarea).summernote('focus');
+                }
+            } else {
+                // Form está sendo escondido
+                const replyTextarea = form.querySelector('#summernote-reply-' + commentId);
+                if (replyTextarea && $(replyTextarea).hasClass('note-editor')) {
+                    console.log('Destroying Summernote for reply form');
+                    $(replyTextarea).summernote('destroy');
+                }
+            }
+        } else {
+            console.error('Reply form not found for comment:', commentId);
+            // Tentar encontrar o formulário com um seletor alternativo
+            const allForms = document.querySelectorAll('[id^="reply-form-"]');
+            console.log('All reply forms found:', allForms);
+        }
+    }
+
+    function toggleLike(commentId) {
+        fetch(`/comments/${commentId}/like`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const likeBtn = document.getElementById('like-btn-' + commentId);
+            const likeCount = document.getElementById('like-count-' + commentId);
+            
+            if (likeBtn && likeCount) {
+                // Atualiza o primeiro span (ícone do coração)
+                const heartIcon = likeBtn.querySelector('span:first-child');
+                if (heartIcon) {
+                    heartIcon.textContent = data.liked ? '❤️' : '🤍';
+                    heartIcon.className = data.liked ? 'text-red-500' : '';
+                }
+                
+                // Atualiza o contador
+                likeCount.textContent = data.count;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Se não autenticado, redireciona para login
+            if (error.status === 401) {
+                window.location.href = '/login';
+            }
+        });
+    }
+    </script>
+    
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
 </body>
 

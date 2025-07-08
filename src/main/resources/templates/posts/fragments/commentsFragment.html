@@ -1,72 +1,165 @@
-<ul th:fragment="commentsFragment(editingCommentId)">
-  <li
-    th:each="comment : ${comments}"
-    th:classappend="${editingCommentId == comment.id} ? 'ring-4 ring-green-400 bg-green-50 scale-105 z-10' : ''"
-    class="mb-4 border rounded-lg shadow-lg p-4 bg-white transition-all duration-200 relative"
-  >
-    <!-- Main comment container -->
-    <div class="relative">
-      <!-- Comment header with user name and action buttons -->
-      <div class="flex items-start justify-between mb-3">
-        <!-- User name -->
-        <p
-          class="text-lg font-semibold text-green-700 flex-1"
-          th:text="${comment.user.name}"
-        ></p>
-
-        <!-- Action buttons next to the name (only when not editing) -->
-        <div
-          th:unless="${editingCommentId == comment.id}"
-          class="flex items-center gap-2 ml-2"
-        >
-          <!-- Edit button - only for the comment owner -->
-          <a
-            th:if="${#authentication.principal.username == comment.user.email}"
-            th:href="@{/comments/{id}/edit(id=${comment.id}, postId=${comment.post.id})}"
-            class="px-2 py-1 text-blue-600 hover:text-white hover:bg-blue-600 transition-colors text-xs border border-blue-200 rounded"
-            title="Edit comment"
-          >
-            📝 Edit
-          </a>
-
-          <!-- Delete button - for the comment owner or admin -->
-          <form
-            th:if="${#authentication.principal.username == comment.user.email || #authorization.expression('hasRole(''ADMIN'')')}"
-            th:action="@{/comments/{id}/delete(id=${comment.id})}"
-            method="post"
-            class="inline-block"
-          >
-            <button
-              type="submit"
-              class="px-2 py-1 text-red-600 hover:text-white hover:bg-red-600 transition-colors text-xs border border-red-200 rounded"
-              onclick="return confirm('Are you sure you want to delete this comment?')"
-              title="Delete comment"
-            >
-              🗑️ Delete
-            </button>
-          </form>
-        </div>
-      </div>
-
-      <!-- Comment content -->
-      <div class="text-gray-700">
-        <p
-          class="text-gray-500 text-sm mt-1"
-          th:text="${#temporals.format(comment.createdAt, 'MM/dd/yyyy')}"
-        ></p>
-
-        <!---EDITING COMMENT-->
-        <div th:if="${editingCommentId == comment.id}">
-          <div
-            th:replace="posts/fragments/commentsEdit :: commentsEdit(comment=${comment})"
-          ></div>
-        </div>
-
-        <!-- If not editing, show normal content -->
-        <div th:unless="${editingCommentId == comment.id}">
-          <p th:utext="${comment.content}">Comment content</p>
-        </div>
-      </div>
+<!-- commentsFragment.html -->
+<div th:fragment="commentsFragment(editingCommentId)" 
+     xmlns:th="http://www.thymeleaf.org" 
+     xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+     
+    <div th:each="comment : ${comments}" class="mb-6">
+        <!-- Renderizar comentário usando o fragment recursivo -->
+        <div th:replace="posts/fragments/commentsFragment :: commentItem(comment=${comment}, level=1, editingCommentId=${editingCommentId})"></div>
     </div>
-  </li>
-</ul>
+</div>
+
+<!-- Fragment recursivo para renderizar um comentário e todas suas replies -->
+<div th:fragment="commentItem(comment, level, editingCommentId)" 
+     xmlns:th="http://www.thymeleaf.org" 
+     xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+     
+    <!-- Container do comentário com posicionamento fixo - sem indentação -->
+    <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
+        
+        <div class="flex justify-between items-start mb-2">
+            <div>
+                <div class="flex items-center space-x-2">
+                    <span class="font-semibold text-green-700" 
+                          th:text="${comment.user.name}">User</span>
+                    <span class="text-gray-500 text-sm" 
+                          th:text="${#temporals.format(comment.createdAt, 'dd/MM/yyyy HH:mm')}">Date</span>
+                    <!-- Indicador de nível (para debug) -->
+                    <span th:if="${level > 1}" class="text-xs text-gray-400 bg-gray-200 px-1 rounded" 
+                          th:text="'L' + ${level}">Level</span>
+                </div>
+                <!-- Indicador de resposta -->
+                <div th:if="${comment.parent != null}" 
+                     class="text-xs text-blue-600 mt-1">
+                    <span>@Respondendo a </span>
+                    <span th:text="${comment.parent.user.name}" class="font-medium">Parent User</span>
+                </div>
+            </div>
+            
+            <!-- Botões de ação do comentário -->
+            <div class="flex space-x-2 comment-actions">
+                <!-- Editar (só próprio usuário) -->
+                <div sec:authorize="isAuthenticated()" 
+                     th:if="${#authentication.name == comment.user.email}">
+                    <a th:href="@{/posts/{postId}(postId=${post.id}, editCommentId=${comment.id})}"
+                       class="text-blue-600 hover:text-blue-800 text-sm"
+                       title="Edit comment">✏️ Edit</a>
+                </div>
+                
+                <!-- Deletar (próprio usuário ou admin) -->
+                <div sec:authorize="isAuthenticated()" 
+                     th:if="${#authentication.name == comment.user.email or #authorization.expression('hasRole(''ADMIN'')')}">
+                    <form th:action="@{/comments/{id}/delete(id=${comment.id})}" 
+                          method="post" style="display: inline;"
+                          onsubmit="return confirm('Are you sure you want to delete this comment?')">
+                        <button type="submit" 
+                                class="text-red-600 hover:text-red-800 text-sm"
+                                title="Delete comment">
+                            🗑️ Delete
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conteúdo do comentário -->
+        <div th:if="${editingCommentId != null and editingCommentId == comment.id}">
+            <!-- Modo de edição -->
+            <form th:action="@{/comments/{id}/edit(id=${comment.id})}" method="post">
+                <textarea th:id="'summernote-edit-' + ${comment.id}" name="content" th:text="${comment.content}" 
+                          class="w-full border rounded p-2" required></textarea>
+                <div class="flex space-x-2 mt-2">
+                    <button type="submit" 
+                            class="px-4 py-2 bg-green-600 text-white rounded">Save</button>
+                    <a th:href="@{/posts/{id}(id=${post.id})}" 
+                       class="px-4 py-2 bg-gray-300 rounded">Cancel</a>
+                </div>
+            </form>
+        </div>
+        <div th:unless="${editingCommentId != null and editingCommentId == comment.id}">
+            <div th:utext="${comment.content}" 
+                 class="text-gray-800 mb-3"></div>
+        </div>
+
+        <!-- Botões de interação -->
+        <div class="flex items-center space-x-4 mt-3">
+            <!-- Botão de Like -->
+            <div sec:authorize="isAuthenticated()">
+                <button th:id="'like-btn-' + ${comment.id}"
+                        th:attr="onclick='toggleLike(' + ${comment.id} + ')'"
+                        class="flex items-center space-x-1 text-gray-600 hover:text-red-500 text-sm px-2 py-1 rounded">
+                    <span th:if="${currentUser != null && comment.isLikedByUser(currentUser)}" class="text-red-500">❤️</span>
+                    <span th:unless="${currentUser != null && comment.isLikedByUser(currentUser)}">🤍</span>
+                    <span th:id="'like-count-' + ${comment.id}" th:text="${comment.likeCount}">0</span>
+                </button>
+            </div>
+            <div sec:authorize="!isAuthenticated()">
+                <span class="flex items-center space-x-1 text-gray-400 text-sm px-2 py-1">
+                    <span>🤍</span>
+                    <span th:text="${comment.likeCount}">0</span>
+                </span>
+            </div>
+
+            <!-- Botão de Reply -->
+            <div sec:authorize="isAuthenticated()">
+                <button type="button"
+                        th:attr="onclick='toggleReplyForm(' + ${comment.id} + ')'"
+                        class="flex items-center space-x-1 text-gray-600 hover:text-green-600 cursor-pointer text-sm px-2 py-1 rounded"
+                        th:title="'Reply to comment ' + ${comment.id}">
+                    <span>💬</span>
+                    <span th:text="${comment.replies != null ? comment.replies.size() : 0}">0</span>
+                    <span>Reply</span>
+                </button>
+            </div>
+            <div sec:authorize="!isAuthenticated()">
+                <span class="flex items-center space-x-1 text-gray-400 text-sm px-2 py-1">
+                    <span>💬</span>
+                    <span th:text="${comment.replies != null ? comment.replies.size() : 0}">0</span>
+                </span>
+            </div>
+        </div>
+
+        <!-- Formulário de Reply (oculto) -->
+        <div sec:authorize="isAuthenticated()" 
+             th:id="'reply-form-' + ${comment.id}" 
+             class="mt-4 hidden border-2 border-blue-200 p-3 rounded"
+             th:data-comment-id="${comment.id}">
+            <h5 class="text-sm font-medium mb-2">Responder ao comentário de <span th:text="${comment.user.name}">User</span>:</h5>
+            <form th:action="@{/comments/{id}/reply(id=${comment.id})}" method="post">
+                <textarea th:id="'summernote-reply-' + ${comment.id}" 
+                          name="content" 
+                          placeholder="Escreva sua resposta..." 
+                          class="w-full border rounded p-2 h-20" 
+                          required></textarea>
+                <div class="flex space-x-2 mt-2">
+                    <button type="submit" 
+                            class="px-4 py-2 bg-green-600 text-white rounded text-sm hover:bg-green-700">
+                        Enviar Resposta
+                    </button>
+                    <button type="button" 
+                            th:attr="onclick='toggleReplyForm(' + ${comment.id} + ')'"
+                            class="px-4 py-2 bg-gray-300 rounded text-sm hover:bg-gray-400">Cancelar</button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Formulário de Reply para não autenticados -->
+        <div sec:authorize="!isAuthenticated()" 
+             th:id="'reply-form-' + ${comment.id}" 
+             class="mt-4 hidden bg-gray-100 p-4 rounded">
+            <p class="text-gray-600 mb-2">You need to <a href="/login" class="text-green-600 hover:underline">login</a> to reply to comments.</p>
+        </div>
+
+        <!-- REPLIES RECURSIVAS - Primeiro reply indentado, próximos alinhados -->
+        <div th:if="${comment.replies != null and !#lists.isEmpty(comment.replies)}" 
+             th:class="${level == 1 ? 'mt-4 ml-8' : 'mt-4'}">
+            <!-- Cada reply usa o mesmo fragment recursivo commentItem -->
+            <div th:each="reply, iterStat : ${comment.replies}" 
+                 class="mt-3 border-t border-gray-100 pt-3">
+                <!-- RECURSÃO: Usa o mesmo fragment commentItem com level + 1 -->
+                <div th:replace="posts/fragments/commentsFragment :: commentItem(comment=${reply}, level=${level + 1}, editingCommentId=${editingCommentId})"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
