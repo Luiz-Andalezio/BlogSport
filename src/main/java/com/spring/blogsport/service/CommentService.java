@@ -18,8 +18,8 @@ public class CommentService {
     private final UserRepository userRepository;
 
     public CommentService(CommentRepository commentRepository,
-                          PostRepository postRepository,
-                          UserRepository userRepository) {
+            PostRepository postRepository,
+            UserRepository userRepository) {
         this.commentRepository = commentRepository;
         this.postRepository = postRepository;
         this.userRepository = userRepository;
@@ -71,11 +71,46 @@ public class CommentService {
                 .orElseThrow(() -> new RuntimeException("Comment not found"));
     } // para acessaar um comentario especifico
 
-
     // contador de comentarios de um post
     public long countComments(Long postId) {
         return commentRepository.countByPostId(postId);
     }
 
+    // Buscar apenas comentários principais (sem replies)
+    public List<Comment> getMainCommentsByPostId(Long postId) {
+        List<Comment> mainComments = commentRepository.findByPostIdAndParentIsNull(postId);
+        System.out.println("DEBUG: Found " + mainComments.size() + " main comments for post " + postId);
+        return mainComments;
+    }
+
+    // Buscar replies de um comentário
+    public List<Comment> getRepliesByParentId(Long parentId) {
+        List<Comment> replies = commentRepository.findByParentId(parentId);
+        System.out.println("DEBUG: Found " + replies.size() + " replies for comment " + parentId);
+        return replies;
+    }
+
+    // Criar reply
+    public Comment addReply(Long parentCommentId, Long userId, String content) {
+        Comment parentComment = getCommentById(parentCommentId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Comment reply = Comment.builder()
+                .content(content)
+                .post(parentComment.getPost()) // Mesmo post do comentário pai
+                .user(user)
+                .parent(parentComment) // Define como reply
+                .build();
+
+        Comment savedReply = commentRepository.save(reply);
+        System.out.println("DEBUG: Created reply with ID: " + savedReply.getId() + " for comment: " + parentCommentId);
+        return savedReply;
+    }
+
+    // Contar total de comentários incluindo replies
+    public int getTotalCommentCount(Long postId) {
+        return commentRepository.countAllByPostId(postId);
+    }
 
 }

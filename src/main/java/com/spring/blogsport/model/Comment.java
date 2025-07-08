@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+import java.security.PublicKey;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -44,8 +46,20 @@ public class Comment {
     @JoinColumn(name = "parent_id")
     private Comment parent;
 
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
-    private List<Comment> replies;
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Comment> replies = new ArrayList<>();
+
+    @OneToMany(mappedBy = "comment" , cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<CommentLike> likes = new ArrayList<>();
+
+    public int getLikeCount(){
+        return likes != null ? likes.size():0;
+    }
+
+    public boolean isLikedByUser(User user){
+        if(user == null || likes == null) return false;
+        return likes.stream().anyMatch(like -> like.getUser().getId().equals(user.getId()));
+    }
 
     @PrePersist
     protected void onCreate() {

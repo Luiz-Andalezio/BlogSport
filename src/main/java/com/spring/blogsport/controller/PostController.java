@@ -14,13 +14,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PostMapping;
 
+import org.springframework.security.core.Authentication;
 @Controller
 @RequestMapping("/posts")
 public class PostController {
@@ -97,18 +93,38 @@ public class PostController {
     }
 
     // Shows a specific post
-    @GetMapping("/{id}")
-    public String viewPost(@PathVariable Long id, Model model) {
-        Post post = postService.getPostById(id);
-        List<Comment> comments = commentService.getCommentsByPostId(post.getId()); // Busca os comentários
-        post.setCommentCount(commentService.countComments(post.getId())); // Atualiza a contagem de comentários
-        post.setLikeCount(likeRepository.countByPostId(post.getId()));
-        List<Category> sidebarCategories = categoryService.getAllCategoriesWithRecentPosts();
-        model.addAttribute("sidebarCategories", sidebarCategories);
-        model.addAttribute("post", post);
-        model.addAttribute("comments", comments);
-        return "posts/postDetails";
+@GetMapping("/{id}")
+public String getPostDetails(@PathVariable Long id, 
+                       @RequestParam(required = false) Long editCommentId,
+                       Model model, 
+                       Authentication authentication) {
+    Post post = postService.getPostById(id);
+    
+    // Buscar apenas comentários principais
+    List<Comment> mainComments = commentService.getMainCommentsByPostId(id);
+    
+    // IMPORTANTE: Para cada comentário principal, carregar suas replies manualmente
+    for (Comment comment : mainComments) {
+        loadRepliesRecursively(comment);
+        
+        // Debug: imprimir para verificar
+        System.out.println("DEBUG: Comment ID: " + comment.getId() + " has " + 
+                          (comment.getReplies() != null ? comment.getReplies().size() : 0) + " replies");
     }
+    
+    model.addAttribute("post", post);
+    model.addAttribute("comments", mainComments);
+    model.addAttribute("editingCommentId", editCommentId);
+    
+    // IMPORTANTE: Adicionar usuário atual para likes funcionarem
+    if (authentication != null) {
+        User currentUser = userService.findByEmail(authentication.getName())
+            .orElse(null);
+        model.addAttribute("currentUser", currentUser);
+    }
+    
+    return "posts/postDetails";
+}
 
     @GetMapping("/{id}/edit")
     public String editPostForm(@PathVariable Long id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
@@ -167,27 +183,21 @@ public class PostController {
         return "redirect:/posts/" + id;
     }
 
-    @PostMapping("/{id}")
-    @ResponseBody
-    public Map<String, Object> addComment(@PathVariable Long id,
-            @AuthenticationPrincipal UserDetails userDetails,
-            @RequestParam String content) {
-        User user = userService.findByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        // Cria o objeto Comment
-        Comment comment = new Comment();
-        comment.setContent(content);
-        comment.setPost(postService.getPostById(id)); // Associa o comentário ao post
-        comment.setUser(user); // Associa o comentário ao usuário
-
-        // Chama o serviço para adicionar o comentário
-        commentService.addComment(id, user.getId(), comment);
-
-        // Retorna uma resposta JSON
-        Map<String, Object> response = new HashMap<>();
-        response.put("message", "Comment added successfully");
-        response.put("commentCount", commentService.countComments(id));
-        return response;
+    /**
+     * Método recursivo para carregar todas as replies de um comentário
+     * e suas sub-replies em todos os níveis (permitindo responder a qualquer comentário)
+     */
+    private void loadRepliesRecursively(Comment comment) {
+        // Carregar replies diretas deste comentário
+        List<Comment> replies = commentService.getRepliesByParentId(comment.getId());
+        comment.setReplies(replies);
+        
+        // Para cada reply, carregar recursivamente suas próprias replies
+        // Isso permite responder a qualquer comentário, criando threads aninhados
+        for (Comment reply : replies) {
+            loadRepliesRecursively(reply);
+        }
+        
+        System.out.println("DEBUG: Loaded " + replies.size() + " replies for comment " + comment.getId());
     }
 }
