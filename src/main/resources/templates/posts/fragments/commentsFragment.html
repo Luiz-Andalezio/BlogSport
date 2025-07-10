@@ -31,7 +31,7 @@
                 <!-- Indicador de resposta -->
                 <div th:if="${comment.parent != null}" 
                      class="text-xs text-blue-600 mt-1">
-                    <span>@Respondendo a </span>
+                    <span>@Replying to </span>
                     <span th:text="${comment.parent.user.name}" class="font-medium">Parent User</span>
                 </div>
             </div>
@@ -124,7 +124,7 @@
              th:id="'reply-form-' + ${comment.id}" 
              class="mt-4 hidden border-2 border-blue-200 p-3 rounded"
              th:data-comment-id="${comment.id}">
-            <h5 class="text-sm font-medium mb-2">Responder ao comentário de <span th:text="${comment.user.name}">User</span>:</h5>
+            <h5 class="text-sm font-medium mb-2">Replying to <span th:text="${comment.user.name}">User</span>:</h5>
             <form th:action="@{/comments/{id}/reply(id=${comment.id})}" method="post">
                 <textarea th:id="'summernote-reply-' + ${comment.id}" 
                           name="content" 

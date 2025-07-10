@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title th:text="'Editar: ' + ${post.title} + ' - BlogSport'">Editar Post - BlogSport</title>
+    <title th:text="'Edit: ' + ${post.title} + ' - BlogSport'">Edit Post - BlogSport</title>
     <link rel="icon" type="image/x-icon" th:href="@{/images/favicon.png}" />
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/tailwind.css">
@@ -23,14 +23,14 @@
             <a th:href="@{/posts/{id}(id=${post.id})}" class="text-green-700 hover:underline"
                 th:text="${post.title}">Post Title</a>
             <span class="text-gray-400">&gt;</span>
-            <span class="text-gray-700">Editar</span>
+            <span class="text-gray-700">Edit</span>
         </nav>
         <main class="flex-1 bg-white p-8">
             <div class="max-w-4xl mx-auto">
                 <!-- Formulário de Edição -->
                 <div class="bg-white rounded-lg shadow-md overflow-hidden mb-8">
                     <div class="p-6">
-                        <h1 class="text-3xl font-bold text-green-700 mb-6">Editar Post</h1>
+                        <h1 class="text-3xl font-bold text-green-700 mb-6">Edit Post</h1>
                         <form th:action="@{/posts/{id}/edit(id=${post.id})}" method="post" class="space-y-6">
                             <div>
                                 <label for="title" class="block text-sm font-medium text-gray-700">Título</label>

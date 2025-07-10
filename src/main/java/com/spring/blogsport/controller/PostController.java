@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import org.springframework.security.core.Authentication;
+
 @Controller
 @RequestMapping("/posts")
 public class PostController {
@@ -89,47 +90,47 @@ public class PostController {
     }
 
     // Shows a specific post
-@GetMapping("/{id}")
-public String getPostDetails(@PathVariable Long id, 
-                       @RequestParam(required = false) Long editCommentId,
-                       Model model, 
-                       Authentication authentication) {
-    Post post = postService.getPostById(id);
-    
-    // Buscar apenas comentários principais
-    List<Comment> mainComments = commentService.getMainCommentsByPostId(id);
-    
-    // IMPORTANTE: Para cada comentário principal, carregar suas replies manualmente
-    for (Comment comment : mainComments) {
-        loadRepliesRecursively(comment);
-        
-        // Debug: imprimir para verificar
-        System.out.println("DEBUG: Comment ID: " + comment.getId() + " has " + 
-                          (comment.getReplies() != null ? comment.getReplies().size() : 0) + " replies");
+    @GetMapping("/{id}")
+    public String getPostDetails(@PathVariable Long id,
+            @RequestParam(required = false) Long editCommentId,
+            Model model,
+            Authentication authentication) {
+        Post post = postService.getPostById(id);
+
+        // Buscar apenas comentários principais
+        List<Comment> mainComments = commentService.getMainCommentsByPostId(id);
+
+        // IMPORTANTE: Para cada comentário principal, carregar suas replies manualmente
+        for (Comment comment : mainComments) {
+            loadRepliesRecursively(comment);
+
+            // Debug: imprimir para verificar
+            System.out.println("DEBUG: Comment ID: " + comment.getId() + " has " +
+                    (comment.getReplies() != null ? comment.getReplies().size() : 0) + " replies");
+        }
+
+        model.addAttribute("post", post);
+        model.addAttribute("comments", mainComments);
+        model.addAttribute("editingCommentId", editCommentId);
+
+        // IMPORTANTE: Adicionar usuário atual para likes funcionarem
+        if (authentication != null) {
+            User currentUser = userService.findByEmail(authentication.getName())
+                    .orElse(null);
+            model.addAttribute("currentUser", currentUser);
+        }
+
+        return "posts/postDetails";
     }
-    
-    model.addAttribute("post", post);
-    model.addAttribute("comments", mainComments);
-    model.addAttribute("editingCommentId", editCommentId);
-    
-    // IMPORTANTE: Adicionar usuário atual para likes funcionarem
-    if (authentication != null) {
-        User currentUser = userService.findByEmail(authentication.getName())
-            .orElse(null);
-        model.addAttribute("currentUser", currentUser);
-    }
-    
-    return "posts/postDetails";
-}
 
     @GetMapping("/{id}/edit")
     public String editPostForm(@PathVariable Long id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
         Post post = postService.getPostById(id);
-        
+
         // Verifica se o usuário atual é o autor do post ou um admin
         User currentUser = userService.findByEmail(userDetails.getUsername()).orElseThrow();
-        if (!post.getUser().getId().equals(currentUser.getId()) && 
-            !userDetails.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+        if (!post.getUser().getId().equals(currentUser.getId()) &&
+                !userDetails.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
             return "redirect:/posts/" + id;
         }
 
@@ -141,13 +142,11 @@ public String getPostDetails(@PathVariable Long id,
         return "posts/editPost";
     }
 
-
     @PostMapping("/{id}/delete")
     public String postMethodName(@PathVariable Long id) {
         postService.deletePost(id);
         return "redirect:/posts";
     }
-    
 
     // Updates the post
     @PostMapping("/{id}/edit")
@@ -181,19 +180,20 @@ public String getPostDetails(@PathVariable Long id,
 
     /**
      * Método recursivo para carregar todas as replies de um comentário
-     * e suas sub-replies em todos os níveis (permitindo responder a qualquer comentário)
+     * e suas sub-replies em todos os níveis (permitindo responder a qualquer
+     * comentário)
      */
     private void loadRepliesRecursively(Comment comment) {
         // Carregar replies diretas deste comentário
         List<Comment> replies = commentService.getRepliesByParentId(comment.getId());
         comment.setReplies(replies);
-        
+
         // Para cada reply, carregar recursivamente suas próprias replies
         // Isso permite responder a qualquer comentário, criando threads aninhados
         for (Comment reply : replies) {
             loadRepliesRecursively(reply);
         }
-        
+
         System.out.println("DEBUG: Loaded " + replies.size() + " replies for comment " + comment.getId());
     }
 }
