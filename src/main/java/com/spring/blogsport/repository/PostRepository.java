@@ -28,4 +28,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     // Returns top3 by title
     List<Post> findTop3ByTitleContainingIgnoreCaseOrContentContainingIgnoreCaseOrderByCreatedAtDesc(String title, String content);
+
+    List<Post> findByTitleContainingIgnoreCase(String title);
 }

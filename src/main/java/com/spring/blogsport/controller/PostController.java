@@ -4,7 +4,6 @@ import com.spring.blogsport.model.Category;
 import com.spring.blogsport.model.Comment;
 import com.spring.blogsport.model.Post;
 import com.spring.blogsport.model.User;
-import com.spring.blogsport.repository.LikeRepository;
 import com.spring.blogsport.service.*;
 import jakarta.validation.Valid;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,20 +24,17 @@ public class PostController {
 
     private final LikeService likeService;
 
-    private final LikeRepository likeRepository;
-
     private final PostService postService;
     private final UserService userService;
     private final CategoryService categoryService;
 
     public PostController(PostService postService,
             UserService userService,
-            CategoryService categoryService, LikeRepository likeRepository, LikeService likeService,
+            CategoryService categoryService, LikeService likeService,
             CommentService commentService) {
         this.postService = postService;
         this.userService = userService;
         this.categoryService = categoryService;
-        this.likeRepository = likeRepository;
         this.likeService = likeService;
         this.commentService = commentService;
     }
