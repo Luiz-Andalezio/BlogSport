@@ -29,6 +29,9 @@
                     class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">Create Post</a>
                 <a href="/admin/users" sec:authorize="hasRole('ROLE_ADMIN')"
                     class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purble-700 transition-colors">Users CRUD</a>
+                <a href="/relatorios/todospostscolecao" sec:authorize="hasRole('ROLE_ADMIN')" target="_blank"
+                    class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors">
+                    <i class="fas fa-file-pdf"></i> Generate PDF Report</a>
             </div>
         </nav>
 
